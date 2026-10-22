@@ -1,0 +1,1649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Office Jamaat</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Layout: single ornamented column — the hero reads as an illuminated page,
+     prayer times as a tabular index. Each prayer in English and Arabic (Amiri).
+     The Rub-el-Hizb (8-point star) is the indicator; gold carries the ornament. */
+  :root {
+    --bg: #F7EEFF;
+    --surface: #FFFFFF;
+    --surface-raised: #FBF5FF;
+    --fg: #2A1757;
+    --fg-soft: #574481;
+    --muted: #8578A8;
+    --border: #E6D4FF;
+    --border-strong: #D0A2FF;
+    --accent: #7A3EDB;
+    --accent-soft: #E6D4FF;
+    --accent-ink: #3F1F8A;
+    --gold: #B8914A;
+    --gold-soft: rgba(184, 145, 74, 0.1);
+    --success: #2E8B57;
+    --warn: #C06A3A;
+    --danger: #B33A5A;
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space: 16px;
+    --space-lg: 20px;
+    --space-xl: 24px;
+    --space-2xl: 32px;
+
+    --radius-sm: 4px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    --body: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --display: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --arabic: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Al Bayan', serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+    --t: 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #130826;
+      --surface: #1E1138;
+      --surface-raised: #291A4A;
+      --fg: #F3E6FF;
+      --fg-soft: #D0A2FF;
+      --muted: #9B86C2;
+      --border: #3A2865;
+      --border-strong: #574481;
+      --accent: #DC9FFF;
+      --accent-soft: #2E1C56;
+      --accent-ink: #F3E6FF;
+      --gold: #D4B687;
+      --gold-soft: rgba(212, 182, 135, 0.12);
+      --success: #6FD39A;
+      --warn: #E89C72;
+      --danger: #E07A9A;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #130826;
+    --surface: #1E1138;
+    --surface-raised: #291A4A;
+    --fg: #F3E6FF;
+    --fg-soft: #D0A2FF;
+    --muted: #9B86C2;
+    --border: #3A2865;
+    --border-strong: #574481;
+    --accent: #DC9FFF;
+    --accent-soft: #2E1C56;
+    --accent-ink: #F3E6FF;
+    --gold: #D4B687;
+    --gold-soft: rgba(212, 182, 135, 0.12);
+    --success: #6FD39A;
+    --warn: #E89C72;
+    --danger: #E07A9A;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 14px;
+    line-height: 1.57;
+    font-weight: 400;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 24px 48px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .app {
+    max-width: 540px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space);
+  }
+
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl) var(--space-xl) var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='%237A3EDB' opacity='0.055'><rect x='24' y='24' width='12' height='12'/><g transform='translate(30 30) rotate(45) translate(-6 -6)'><rect x='0' y='0' width='12' height='12'/></g></g></svg>");
+    background-repeat: repeat;
+    background-position: center;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero > * { position: relative; z-index: 1; }
+
+  .hero-crown {
+    color: var(--gold);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .hero-crown .rub { width: 16px; height: 16px; }
+  .hero-crown .crown-line {
+    width: 44px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .hijri {
+    font-family: var(--arabic);
+    font-size: 18px;
+    line-height: 24px;
+    color: var(--fg-soft);
+    margin-top: 4px;
+    direction: rtl;
+    font-weight: 400;
+  }
+
+  .next-label {
+    font-size: 11px;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: var(--space-lg);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .next-label::before, .next-label::after {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--border-strong);
+  }
+  .next-name {
+    font-family: var(--display);
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: -0.015em;
+    font-weight: 600;
+    color: var(--fg);
+    margin-top: var(--space-sm);
+    text-wrap: balance;
+  }
+  .next-arabic {
+    font-family: var(--arabic);
+    font-size: 48px;
+    line-height: 56px;
+    color: var(--accent);
+    margin-top: 2px;
+    direction: rtl;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .next-time {
+    font-family: var(--mono);
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 500;
+    color: var(--fg-soft);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    margin-top: var(--space-sm);
+  }
+  .next-start {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+  .countdown {
+    margin-top: var(--space);
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding: 7px 16px;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20px;
+    font-variant-numeric: tabular-nums;
+    transition: background var(--t), color var(--t);
+  }
+  .countdown.imminent { background: var(--accent); color: var(--surface); }
+
+  .section-title {
+    font-size: 11px;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-weight: 500;
+    margin: var(--space-xs) var(--space-xs) var(--space-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .section-title .section-ornament {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--gold);
+  }
+  .section-ornament .rub { width: 10px; height: 10px; }
+
+  .prayer-list {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .prayer-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: var(--space);
+    padding: 14px var(--space-lg);
+    border-bottom: 1px solid var(--border);
+    min-width: 0;
+    position: relative;
+    transition: background var(--t);
+  }
+  .prayer-row:last-child { border-bottom: none; }
+  .prayer-row.active {
+    background: linear-gradient(90deg, var(--accent-soft), transparent 85%);
+  }
+  .prayer-row.passed { opacity: 0.55; }
+
+  .prayer-indicator {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--border-strong);
+    transition: color var(--t);
+  }
+  .prayer-indicator .rub {
+    width: 13px; height: 13px;
+    transition: width var(--t), height var(--t);
+  }
+  .prayer-row.active .prayer-indicator { color: var(--accent); }
+  .prayer-row.active .prayer-indicator .rub { width: 20px; height: 20px; }
+
+  .prayer-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+  }
+  .prayer-name {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+  .prayer-arabic {
+    font-family: var(--arabic);
+    font-size: 18px;
+    line-height: 22px;
+    color: var(--muted);
+    direction: rtl;
+    font-weight: 400;
+    margin-top: -2px;
+  }
+  .prayer-row.active .prayer-arabic { color: var(--accent); }
+
+  .mute-badge {
+    font-size: 10px;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--warn);
+    font-weight: 600;
+    padding: 2px 6px;
+    background: color-mix(in srgb, var(--warn) 15%, transparent);
+    border-radius: var(--radius-sm);
+  }
+  .prayer-sub {
+    font-size: 10px;
+    line-height: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .prayer-row.active .prayer-sub { color: var(--accent); }
+  .prayer-times {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 0;
+  }
+  .prayer-time {
+    font-family: var(--mono);
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--fg-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .prayer-row.active .prayer-time { color: var(--accent); font-weight: 600; }
+  .prayer-start {
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    margin-top: 1px;
+    letter-spacing: 0.02em;
+  }
+
+  .banner {
+    background: var(--accent);
+    color: var(--surface);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space);
+    animation: pulse 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  .banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='white' opacity='0.07'><rect x='24' y='24' width='12' height='12'/><g transform='translate(30 30) rotate(45) translate(-6 -6)'><rect x='0' y='0' width='12' height='12'/></g></g></svg>");
+    background-repeat: repeat;
+    pointer-events: none;
+  }
+  .banner > * { position: relative; z-index: 1; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
+    50% { box-shadow: 0 0 0 10px transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .banner { animation: none; }
+    .countdown, .prayer-row, .prayer-indicator { transition: none; }
+  }
+  .banner-body { flex: 1; min-width: 0; }
+  .banner-title {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .banner-arabic {
+    font-family: var(--arabic);
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 400;
+    direction: rtl;
+  }
+  .banner-msg { font-size: 13px; line-height: 20px; opacity: 0.92; margin-top: 2px; }
+  .banner-close {
+    background: transparent;
+    border: 1px solid currentColor;
+    color: inherit;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background var(--t);
+  }
+  .banner-close:hover { background: color-mix(in srgb, currentColor 18%, transparent); }
+
+  .admin-toggle { display: flex; justify-content: center; margin-top: var(--space-xs); }
+  .admin-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px var(--space);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color var(--t), border-color var(--t), background var(--t);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .admin-btn .rub { width: 10px; height: 10px; color: var(--gold); }
+  .admin-btn:hover { color: var(--fg); border-color: var(--border-strong); background: var(--surface); }
+  .admin-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .admin-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+  .admin-section h3 {
+    font-family: var(--body);
+    font-size: 11px;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-weight: 500;
+    margin: 0 0 var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .admin-section h3::before {
+    content: "";
+    width: 6px; height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    display: inline-block;
+  }
+
+  .call-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-sm);
+  }
+  .call-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-md) var(--space);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    gap: 2px;
+    transition: border-color var(--t), color var(--t), transform var(--t);
+    min-width: 0;
+    position: relative;
+  }
+  .call-btn:hover { border-color: var(--accent); }
+  .call-btn:active { transform: translateY(1px); }
+  .call-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .call-btn-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    width: 100%;
+  }
+  .call-btn-name {
+    font-size: 16px; line-height: 22px; font-weight: 600; color: var(--fg);
+    transition: color var(--t); letter-spacing: -0.005em;
+  }
+  .call-btn-arabic {
+    font-family: var(--arabic);
+    font-size: 18px;
+    line-height: 22px;
+    color: var(--muted);
+    direction: rtl;
+    margin-left: auto;
+  }
+  .call-btn-sub {
+    font-size: 10px; line-height: 14px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500;
+    margin-top: 2px;
+  }
+  .call-btn:hover .call-btn-name { color: var(--accent); }
+  .call-btn:hover .call-btn-arabic { color: var(--accent); }
+
+  /* Jamaat time editor */
+  .jamaat-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .jamaat-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-md);
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .jamaat-head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    min-width: 0;
+  }
+  .jamaat-eng {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg);
+  }
+  .jamaat-ar {
+    font-family: var(--arabic);
+    font-size: 16px;
+    color: var(--muted);
+    direction: rtl;
+  }
+  .jamaat-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .segmented {
+    display: inline-flex;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .seg-btn {
+    background: transparent;
+    border: none;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: inherit;
+    min-width: 36px;
+    transition: background var(--t), color var(--t);
+  }
+  .seg-btn:hover { color: var(--fg); }
+  .seg-btn.active {
+    background: var(--accent);
+    color: var(--surface);
+  }
+  .seg-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .jamaat-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 6px 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg);
+    width: 76px;
+    min-height: 30px;
+    text-align: center;
+  }
+  .jamaat-input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+
+  .mute-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+    gap: var(--space-xs);
+  }
+  .mute-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px var(--space-md);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--fg-soft);
+    transition: border-color var(--t), color var(--t), background var(--t);
+  }
+  .mute-btn:hover { border-color: var(--border-strong); color: var(--fg); }
+  .mute-btn.on {
+    background: color-mix(in srgb, var(--warn) 12%, var(--surface-raised));
+    color: var(--warn);
+    border-color: var(--warn);
+  }
+  .mute-check {
+    width: 16px; height: 16px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-strong);
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+    transition: background var(--t), border-color var(--t);
+  }
+  .mute-btn.on .mute-check { background: var(--warn); border-color: var(--warn); }
+  .mute-btn.on .mute-check::after {
+    content: "";
+    position: absolute;
+    left: 4px; top: 1px;
+    width: 4px; height: 8px;
+    border: solid var(--surface);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-md); }
+  .form-row:last-child { margin-bottom: 0; }
+  .form-row label {
+    font-size: 11px; line-height: 16px;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--muted); font-weight: 500;
+  }
+  .form-row input, .form-row select {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    color: var(--fg);
+    min-height: 44px;
+    transition: border-color var(--t);
+  }
+  .form-row input::placeholder { color: var(--muted); }
+  .form-row input:focus-visible, .form-row select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+  @media (max-width: 420px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .btn {
+    background: var(--accent);
+    color: var(--surface);
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px var(--space-lg);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    min-height: 40px;
+    transition: filter var(--t), transform var(--t);
+  }
+  .btn:hover { filter: brightness(0.95); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--fg-soft);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { color: var(--fg); border-color: var(--border-strong); background: var(--surface-raised); }
+  .btn-full { width: 100%; }
+
+  .save-status {
+    display: inline-flex; align-items: center; gap: var(--space-sm);
+    font-size: 12px; line-height: 18px; font-weight: 500;
+    color: var(--muted); min-height: 20px;
+  }
+  .save-status.ok { color: var(--success); }
+  .save-status.err { color: var(--danger); }
+
+  .footer {
+    margin-top: var(--space-md);
+    display: flex; flex-direction: column; gap: var(--space-sm);
+    align-items: center;
+    color: var(--muted);
+    font-size: 11px; line-height: 16px; font-weight: 400;
+    letter-spacing: 0.03em;
+    text-align: center;
+    padding: 0 var(--space-md);
+  }
+  .footer-ornament {
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .footer-ornament .rub { width: 8px; height: 8px; }
+  .footer-ornament .line {
+    width: 32px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .footer strong { color: var(--fg-soft); font-weight: 500; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 10px; line-height: 16px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; border: none; font-family: inherit;
+    transition: background var(--t), color var(--t);
+  }
+  .status-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .status-ok { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
+  .status-warn { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
+
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    padding: var(--space-lg);
+    padding-left: max(var(--space-lg), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-lg), env(safe-area-inset-right, 0px));
+    z-index: 100;
+  }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    width: 100%;
+    max-width: 380px;
+    display: flex; flex-direction: column; gap: var(--space-md);
+    box-shadow: 0 20px 50px -20px color-mix(in srgb, var(--accent) 25%, transparent);
+    position: relative;
+  }
+  .modal-crown {
+    display: flex;
+    justify-content: center;
+    color: var(--gold);
+    margin-bottom: var(--space-xs);
+  }
+  .modal-crown .rub { width: 14px; height: 14px; }
+  .modal h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px; line-height: 28px;
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+  .modal p { color: var(--muted); margin: 0; font-size: 13px; line-height: 20px; text-align: center; }
+  .modal-actions { display: flex; gap: var(--space-sm); margin-top: 6px; }
+  .modal-actions .btn { flex: 1; }
+
+  .wrong-shake { animation: shake 0.3s ease; border-color: var(--danger) !important; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/adhan/4.4.3/adhan.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="rub" viewBox="-10 -10 20 20">
+      <g fill="currentColor">
+        <rect x="-6.5" y="-6.5" width="13" height="13"/>
+        <rect x="-6.5" y="-6.5" width="13" height="13" transform="rotate(45)"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="app">
+  <header class="hero">
+    <div class="hero-crown">
+      <span class="crown-line"></span>
+      <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
+      <span class="crown-line"></span>
+    </div>
+    <div class="eyebrow"><span id="hero-location">Setting up</span> · <span id="today-date">—</span></div>
+    <div class="hijri" id="hijri-date">—</div>
+    <div class="next-label">Next jamaat</div>
+    <div class="next-name" id="next-name">—</div>
+    <div class="next-arabic" id="next-arabic" dir="rtl">—</div>
+    <div class="next-time" id="next-time">—</div>
+    <div class="next-start" id="next-start"></div>
+    <div class="countdown" id="countdown">starting…</div>
+  </header>
+
+  <div id="banner" class="banner" hidden>
+    <div class="banner-body">
+      <div class="banner-title">
+        <span id="banner-title">Prayer call</span>
+        <span class="banner-arabic" id="banner-arabic" dir="rtl"></span>
+      </div>
+      <div class="banner-msg" id="banner-msg"></div>
+    </div>
+    <button class="banner-close" id="banner-close">Dismiss</button>
+  </div>
+
+  <section>
+    <div class="section-title">
+      <span class="section-ornament">
+        <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
+        <span>Jamaat schedule</span>
+      </span>
+      <button id="notification-status" class="status-pill status-warn" type="button">
+        notifications off
+      </button>
+    </div>
+    <div class="prayer-list" id="prayer-list"></div>
+  </section>
+
+  <div class="admin-toggle">
+    <button class="admin-btn" id="admin-btn" type="button">
+      <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
+      <span>Admin controls</span>
+    </button>
+  </div>
+
+  <div class="admin-panel" id="admin-panel" hidden>
+    <div class="admin-section">
+      <h3>Call the office now</h3>
+      <div class="call-grid" id="call-grid"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Jamaat times</h3>
+      <div class="jamaat-section" id="jamaat-section"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Mute today's auto-reminder</h3>
+      <div class="mute-grid" id="mute-grid"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Settings</h3>
+      <div class="form-row">
+        <label for="setting-city">Location preset</label>
+        <select id="setting-city"></select>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="setting-lat">Latitude</label>
+          <input id="setting-lat" type="number" step="0.0001">
+        </div>
+        <div class="form-row">
+          <label for="setting-lon">Longitude</label>
+          <input id="setting-lon" type="number" step="0.0001">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="setting-method">Calculation method</label>
+          <select id="setting-method">
+            <option value="Karachi">Karachi (S. Asia)</option>
+            <option value="MuslimWorldLeague">Muslim World League</option>
+            <option value="Egyptian">Egyptian</option>
+            <option value="UmmAlQura">Umm al-Qura (Makkah)</option>
+            <option value="Dubai">Dubai</option>
+            <option value="MoonsightingCommittee">Moonsighting Committee</option>
+            <option value="NorthAmerica">ISNA (N. America)</option>
+            <option value="Kuwait">Kuwait</option>
+            <option value="Qatar">Qatar</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Tehran">Tehran</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="setting-lead">Reminder lead (min)</label>
+          <input id="setting-lead" type="number" min="0" max="60" value="5">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="setting-passcode">Admin passcode (optional)</label>
+        <input id="setting-passcode" type="text" placeholder="leave blank for no passcode" autocomplete="off">
+      </div>
+      <button class="btn btn-full" id="save-settings" type="button">Save settings</button>
+      <div class="save-status" id="save-status"></div>
+    </div>
+
+    <button class="btn btn-secondary btn-full" id="exit-admin" type="button">Exit admin</button>
+  </div>
+
+  <div class="footer">
+    <div class="footer-ornament">
+      <span class="line"></span>
+      <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
+      <span class="line"></span>
+    </div>
+    <div><span id="footer-method">—</span> · Hanafi school · <span id="footer-sync">connecting…</span></div>
+    <div>Open in Chrome, allow notifications, then <strong>Install page as app</strong> for a desktop shortcut.</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="passcode-modal" hidden>
+  <div class="modal">
+    <div class="modal-crown"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></div>
+    <h2>Admin passcode</h2>
+    <p>Enter the passcode to open admin controls.</p>
+    <div class="form-row">
+      <input id="passcode-input" type="password" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="passcode-cancel" type="button">Cancel</button>
+      <button class="btn" id="passcode-ok" type="button">Enter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ================================================================
+  //  SUPABASE CREDENTIALS — paste yours from Project Settings → API
+  // ================================================================
+  const SUPABASE_URL = 'https://bltwiearpbkjbjpvmmur.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdHdpZWFycGJramJqcHZtbXVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NjUyMjAsImV4cCI6MjEwODI0MTIyMH0.Y8afcIGUcGhZxWQwWTZkFKGnrYjPw7rsmdfWA1PwZLE';
+  // ================================================================
+
+  const PRAYERS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+  const PRAYER_LABELS = { fajr: 'Fajr', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' };
+  const PRAYER_ARABIC = {
+    fajr: 'الفجر',
+    dhuhr: 'الظهر',
+    asr: 'العصر',
+    maghrib: 'المغرب',
+    isha: 'العشاء',
+  };
+  const JAMAAT_DEFAULT = {
+    fajr:    { mode: 'offset', offset: 20, fixed: '05:45' },
+    dhuhr:   { mode: 'offset', offset: 20, fixed: '13:00' },
+    asr:     { mode: 'offset', offset: 20, fixed: '16:30' },
+    maghrib: { mode: 'offset', offset: 5,  fixed: '18:30' },
+    isha:    { mode: 'offset', offset: 20, fixed: '20:00' },
+  };
+  const PRESETS = {
+    'Custom': null,
+    'Karachi, PK': [24.8607, 67.0011, 'Karachi'],
+    'Lahore, PK': [31.5204, 74.3587, 'Karachi'],
+    'Islamabad, PK': [33.6844, 73.0479, 'Karachi'],
+    'Rawalpindi, PK': [33.5651, 73.0169, 'Karachi'],
+    'Peshawar, PK': [34.0151, 71.5249, 'Karachi'],
+    'Faisalabad, PK': [31.4504, 73.1350, 'Karachi'],
+    'Multan, PK': [30.1575, 71.5249, 'Karachi'],
+    'Dhaka, BD': [23.8103, 90.4125, 'Karachi'],
+    'Chittagong, BD': [22.3569, 91.7832, 'Karachi'],
+    'Delhi, IN': [28.6139, 77.2090, 'Karachi'],
+    'Mumbai, IN': [19.0760, 72.8777, 'Karachi'],
+    'Hyderabad, IN': [17.3850, 78.4867, 'Karachi'],
+    'Dubai, AE': [25.2048, 55.2708, 'Dubai'],
+    'Abu Dhabi, AE': [24.4539, 54.3773, 'Dubai'],
+    'Riyadh, SA': [24.7136, 46.6753, 'UmmAlQura'],
+    'Jeddah, SA': [21.4858, 39.1925, 'UmmAlQura'],
+    'Istanbul, TR': [41.0082, 28.9784, 'Turkey'],
+    'Kuala Lumpur, MY': [3.1390, 101.6869, 'Singapore'],
+    'Jakarta, ID': [-6.2088, 106.8456, 'Singapore'],
+    'London, UK': [51.5074, -0.1278, 'MuslimWorldLeague'],
+    'New York, US': [40.7128, -74.0060, 'NorthAmerica'],
+    'Toronto, CA': [43.6532, -79.3832, 'NorthAmerica'],
+  };
+  const DEFAULT_CONFIG = {
+    lat: 24.8607,
+    lon: 67.0011,
+    locationName: 'Karachi',
+    method: 'Karachi',
+    leadMinutes: 5,
+    adminPasscode: '',
+    mutedToday: {},
+    mutedDate: '',
+    jamaat: JAMAAT_DEFAULT,
+  };
+
+  let config = Object.assign({}, DEFAULT_CONFIG);
+  let sb = null;
+  let timers = [];
+  const seenTriggers = new Set();
+  let audioCtx = null;
+  let isAdmin = false;
+  let currentTimes = null;
+  let currentJamaats = null;
+
+  function $(id) { return document.getElementById(id); }
+
+  function todayKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function fmtTime(d) {
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase().replace(/\s/g, '');
+  }
+  function fmtDate(d) {
+    return d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+  }
+  function fmtHijri(d) {
+    try {
+      return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+        day: 'numeric', month: 'long', year: 'numeric'
+      }).format(d);
+    } catch (e) {
+      try {
+        return new Intl.DateTimeFormat('en-u-ca-islamic', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        }).format(d);
+      } catch (_) { return ''; }
+    }
+  }
+  function fmtDuration(ms) {
+    if (ms <= 0) return 'now';
+    const totalSec = Math.ceil(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    if (h > 0) return 'in ' + h + 'h ' + m + 'm';
+    if (m > 0) return 'in ' + m + 'm ' + String(s).padStart(2, '0') + 's';
+    return 'in ' + s + 's';
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function computeTimes(forDate) {
+    const d = forDate || new Date();
+    const coords = new adhan.Coordinates(config.lat, config.lon);
+    const methodFn = adhan.CalculationMethod[config.method] || adhan.CalculationMethod.Karachi;
+    const params = methodFn();
+    params.madhab = adhan.Madhab.Hanafi;
+    const times = new adhan.PrayerTimes(coords, d, params);
+    return { fajr: times.fajr, dhuhr: times.dhuhr, asr: times.asr, maghrib: times.maghrib, isha: times.isha };
+  }
+
+  function computeJamaat(prayer, startTime) {
+    const src = (config.jamaat && config.jamaat[prayer]) || JAMAAT_DEFAULT[prayer];
+    if (src && src.mode === 'fixed' && src.fixed) {
+      const parts = String(src.fixed).split(':');
+      const h = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      if (isFinite(h) && isFinite(m)) {
+        const j = new Date(startTime);
+        j.setHours(h, m, 0, 0);
+        if (j >= startTime) return j;
+        return startTime;
+      }
+    }
+    const offset = (src && typeof src.offset === 'number' && src.offset >= 0) ? src.offset : 20;
+    return new Date(startTime.getTime() + offset * 60000);
+  }
+
+  function computeJamaats(times) {
+    const out = {};
+    PRAYERS.forEach(p => { out[p] = computeJamaat(p, times[p]); });
+    return out;
+  }
+
+  function getNextPrayer(jamaats, starts) {
+    const now = new Date();
+    for (const p of PRAYERS) {
+      if (jamaats[p] > now) return { prayer: p, time: jamaats[p], start: starts[p], tomorrow: false };
+    }
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const t = computeTimes(tomorrow);
+    const j = computeJamaats(t);
+    return { prayer: 'fajr', time: j.fajr, start: t.fajr, tomorrow: true };
+  }
+
+  function renderHero() {
+    if (!currentTimes || !currentJamaats) return;
+    const next = getNextPrayer(currentJamaats, currentTimes);
+    $('hero-location').textContent = config.locationName;
+    $('today-date').textContent = fmtDate(new Date());
+    $('hijri-date').textContent = fmtHijri(new Date());
+    $('next-name').textContent = PRAYER_LABELS[next.prayer] + (next.tomorrow ? ' · tomorrow' : '');
+    $('next-arabic').textContent = PRAYER_ARABIC[next.prayer] || '';
+    $('next-time').textContent = fmtTime(next.time);
+    const startEl = $('next-start');
+    if (startEl) {
+      const sameTime = Math.abs(next.time - next.start) < 60000;
+      startEl.textContent = sameTime ? '' : 'prayer starts ' + fmtTime(next.start);
+    }
+    const ms = next.time - new Date();
+    const countEl = $('countdown');
+    countEl.textContent = fmtDuration(ms);
+    countEl.classList.toggle('imminent', ms < 10 * 60 * 1000 && ms > 0);
+  }
+
+  function renderPrayerList() {
+    if (!currentTimes || !currentJamaats) return;
+    const next = getNextPrayer(currentJamaats, currentTimes);
+    const now = new Date();
+    const todayK = todayKey();
+    const html = PRAYERS.map(p => {
+      const start = currentTimes[p];
+      const jamaat = currentJamaats[p];
+      const isNext = p === next.prayer && !next.tomorrow;
+      const passed = jamaat < now;
+      const muted = !!(config.mutedToday[p] && config.mutedDate === todayK);
+      const classes = ['prayer-row'];
+      if (isNext) classes.push('active');
+      if (passed) classes.push('passed');
+      const sub = isNext ? 'next' : passed ? 'done' : '';
+      const muteBadge = muted ? '<span class="mute-badge">muted</span>' : '';
+      const sameTime = Math.abs(jamaat - start) < 60000;
+      const startLine = sameTime ? '' : '<span class="prayer-start">starts ' + fmtTime(start) + '</span>';
+      return '<div class="' + classes.join(' ') + '">' +
+        '<span class="prayer-indicator"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></span>' +
+        '<div class="prayer-labels">' +
+          '<span class="prayer-name">' + PRAYER_LABELS[p] + muteBadge + '</span>' +
+          '<span class="prayer-arabic" dir="rtl">' + (PRAYER_ARABIC[p] || '') + '</span>' +
+        '</div>' +
+        '<span class="prayer-sub">' + sub + '</span>' +
+        '<div class="prayer-times">' +
+          '<span class="prayer-time">' + fmtTime(jamaat) + '</span>' +
+          startLine +
+        '</div>' +
+        '</div>';
+    }).join('');
+    $('prayer-list').innerHTML = html;
+  }
+
+  function renderFooter() {
+    $('footer-method').textContent = 'Method: ' + config.method;
+    $('footer-sync').textContent = sb ? 'synced with your group' : 'local only';
+  }
+
+  function renderAdminControls() {
+    const grid = $('call-grid');
+    grid.innerHTML = PRAYERS.map(p =>
+      '<button class="call-btn" type="button" data-prayer="' + p + '">' +
+      '<div class="call-btn-row">' +
+        '<span class="call-btn-name">' + PRAYER_LABELS[p] + '</span>' +
+        '<span class="call-btn-arabic" dir="rtl">' + (PRAYER_ARABIC[p] || '') + '</span>' +
+      '</div>' +
+      '<span class="call-btn-sub">call now</span>' +
+      '</button>'
+    ).join('');
+    grid.querySelectorAll('.call-btn').forEach(btn => {
+      btn.addEventListener('click', () => sendTrigger(btn.dataset.prayer));
+    });
+
+    renderJamaatControls();
+
+    const todayK = todayKey();
+    const mute = $('mute-grid');
+    mute.innerHTML = PRAYERS.map(p => {
+      const on = !!(config.mutedToday[p] && config.mutedDate === todayK);
+      return '<button class="mute-btn ' + (on ? 'on' : '') + '" type="button" data-prayer="' + p + '">' +
+        '<span class="mute-check"></span>' +
+        '<span>' + PRAYER_LABELS[p] + '</span>' +
+        '</button>';
+    }).join('');
+    mute.querySelectorAll('.mute-btn').forEach(btn => {
+      btn.addEventListener('click', () => toggleMute(btn.dataset.prayer));
+    });
+
+    const presetSel = $('setting-city');
+    presetSel.innerHTML = Object.keys(PRESETS).map(k =>
+      '<option value="' + escapeHtml(k) + '">' + escapeHtml(k) + '</option>'
+    ).join('');
+    let matched = 'Custom';
+    for (const [name, data] of Object.entries(PRESETS)) {
+      if (data && Math.abs(data[0] - config.lat) < 0.01 && Math.abs(data[1] - config.lon) < 0.01 && data[2] === config.method) {
+        matched = name; break;
+      }
+    }
+    presetSel.value = matched;
+    $('setting-lat').value = config.lat;
+    $('setting-lon').value = config.lon;
+    $('setting-method').value = config.method;
+    $('setting-lead').value = config.leadMinutes;
+    $('setting-passcode').value = config.adminPasscode;
+    $('save-status').textContent = '';
+    $('save-status').classList.remove('ok', 'err');
+  }
+
+  function renderAll() {
+    try {
+      currentTimes = computeTimes();
+      currentJamaats = computeJamaats(currentTimes);
+    } catch (e) { console.error('compute failed', e); return; }
+    renderHero();
+    renderPrayerList();
+    renderFooter();
+    scheduleAutoReminders();
+    if (isAdmin) renderAdminControls();
+  }
+
+  function renderJamaatControls() {
+    const section = $('jamaat-section');
+    if (!section) return;
+    const current = config.jamaat || JAMAAT_DEFAULT;
+    section.innerHTML = PRAYERS.map(p => {
+      const j = Object.assign({}, JAMAAT_DEFAULT[p], current[p] || {});
+      const isOffset = j.mode !== 'fixed';
+      return (
+        '<div class="jamaat-row" data-prayer="' + p + '">' +
+          '<div class="jamaat-head">' +
+            '<span class="jamaat-eng">' + PRAYER_LABELS[p] + '</span>' +
+            '<span class="jamaat-ar" dir="rtl">' + PRAYER_ARABIC[p] + '</span>' +
+          '</div>' +
+          '<div class="jamaat-controls">' +
+            '<div class="segmented">' +
+              '<button type="button" class="seg-btn ' + (isOffset ? 'active' : '') + '" data-mode="offset">+ min</button>' +
+              '<button type="button" class="seg-btn ' + (isOffset ? '' : 'active') + '" data-mode="fixed">at</button>' +
+            '</div>' +
+            '<input type="number" class="jamaat-input offset-input" min="0" max="120" value="' + j.offset + '"' + (isOffset ? '' : ' hidden') + '>' +
+            '<input type="time" class="jamaat-input fixed-input" value="' + j.fixed + '"' + (isOffset ? ' hidden' : '') + '>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+    section.querySelectorAll('.jamaat-row').forEach(row => {
+      const segBtns = row.querySelectorAll('.seg-btn');
+      const offsetInput = row.querySelector('.offset-input');
+      const fixedInput = row.querySelector('.fixed-input');
+      segBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mode = btn.dataset.mode;
+          segBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+          offsetInput.hidden = (mode !== 'offset');
+          fixedInput.hidden = (mode !== 'fixed');
+        });
+      });
+    });
+  }
+
+  function collectJamaatFromForm() {
+    const section = $('jamaat-section');
+    if (!section) return config.jamaat || JAMAAT_DEFAULT;
+    const out = {};
+    section.querySelectorAll('.jamaat-row').forEach(row => {
+      const p = row.dataset.prayer;
+      const active = row.querySelector('.seg-btn.active');
+      const mode = active ? active.dataset.mode : 'offset';
+      const offsetRaw = parseInt(row.querySelector('.offset-input').value, 10);
+      const offset = Math.max(0, Math.min(120, isFinite(offsetRaw) ? offsetRaw : 20));
+      const fixed = row.querySelector('.fixed-input').value || JAMAAT_DEFAULT[p].fixed;
+      out[p] = { mode, offset, fixed };
+    });
+    return out;
+  }
+
+  async function requestNotificationPerm(forceAsk) {
+    const btn = $('notification-status');
+    if (!('Notification' in window)) {
+      btn.textContent = 'notifications unavailable';
+      return;
+    }
+    if (Notification.permission === 'granted') {
+      btn.textContent = 'notifications on';
+      btn.classList.remove('status-warn');
+      btn.classList.add('status-ok');
+      return;
+    }
+    if (Notification.permission === 'denied') {
+      btn.textContent = 'notifications blocked';
+      return;
+    }
+    if (!forceAsk) {
+      btn.textContent = 'tap to enable notifications';
+      return;
+    }
+    try {
+      const res = await Notification.requestPermission();
+      if (res === 'granted') {
+        btn.textContent = 'notifications on';
+        btn.classList.remove('status-warn');
+        btn.classList.add('status-ok');
+      } else {
+        btn.textContent = 'notifications off';
+      }
+    } catch (e) { console.error(e); }
+  }
+
+  function playChime() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      [587.33, 783.99, 987.77].forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        const start = now + i * 0.22;
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(0.16, start + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.9);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(start);
+        osc.stop(start + 0.95);
+      });
+    } catch (e) { /* silent */ }
+  }
+
+  let bannerHideTimer = null;
+  function showBanner(title, msg, arabic) {
+    $('banner-title').textContent = title;
+    $('banner-arabic').textContent = arabic || '';
+    $('banner-msg').textContent = msg;
+    $('banner').hidden = false;
+    if (bannerHideTimer) clearTimeout(bannerHideTimer);
+    bannerHideTimer = setTimeout(() => { $('banner').hidden = true; }, 10 * 60 * 1000);
+  }
+
+  function notifyPrayer(prayer, kind) {
+    const name = PRAYER_LABELS[prayer] || prayer;
+    const arabic = PRAYER_ARABIC[prayer] || '';
+    const auto = kind === 'auto';
+    const title = auto ? name + ' in ' + config.leadMinutes + ' minutes' : 'Call for ' + name + ' jamaat';
+    const msg = auto
+      ? 'Jamaat shortly — wrap up and head over.'
+      : 'Everyone — ' + name + ' is being called now.';
+    showBanner(title, msg, arabic);
+    playChime();
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try {
+        const n = new Notification(title, {
+          body: msg,
+          tag: 'jamaat-' + prayer + '-' + (auto ? 'auto' : 'manual'),
+          requireInteraction: false,
+          silent: false,
+        });
+        setTimeout(() => { try { n.close(); } catch (_) {} }, 60000);
+      } catch (e) { /* ignore */ }
+    }
+  }
+
+  function clearTimers() {
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+  }
+
+  function scheduleAutoReminders() {
+    clearTimers();
+    if (!currentJamaats) return;
+    const now = new Date();
+    const todayK = todayKey();
+    for (const p of PRAYERS) {
+      const t = currentJamaats[p];
+      const remindAt = new Date(t.getTime() - config.leadMinutes * 60000);
+      if (remindAt > now) {
+        const prayer = p;
+        const delay = remindAt - now;
+        if (delay > 2147483000) continue;
+        timers.push(setTimeout(() => {
+          if (config.mutedToday[prayer] && config.mutedDate === todayK) return;
+          notifyPrayer(prayer, 'auto');
+        }, delay));
+      }
+    }
+    const midnight = new Date();
+    midnight.setHours(24, 0, 30, 0);
+    const toMid = midnight - now;
+    if (toMid > 0 && toMid < 2147483000) {
+      timers.push(setTimeout(renderAll, toMid));
+    }
+  }
+
+  // --- Supabase ---
+  async function initDb() {
+    try {
+      if (!window.supabase || !window.supabase.createClient) {
+        $('footer-sync').textContent = 'local only (SDK missing)';
+        return;
+      }
+      if (!SUPABASE_URL.includes('supabase.co') || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+        $('footer-sync').textContent = 'local only (set Supabase keys)';
+        return;
+      }
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        realtime: { params: { eventsPerSecond: 10 } },
+      });
+
+      try {
+        const { data: row, error } = await sb
+          .from('config').select('data').eq('id', 'main').maybeSingle();
+        if (error && error.code !== 'PGRST116') throw error;
+        if (row && row.data) {
+          config = Object.assign({}, DEFAULT_CONFIG, row.data);
+          if (config.mutedDate !== todayKey()) {
+            config.mutedToday = {};
+            config.mutedDate = '';
+          }
+        } else {
+          await sb.from('config').upsert({ id: 'main', data: config });
+        }
+      } catch (e) { console.warn('config load', e); }
+
+      sb.channel('config_main')
+        .on('postgres_changes',
+          { event: '*', schema: 'public', table: 'config', filter: 'id=eq.main' },
+          payload => {
+            const d = payload.new && payload.new.data;
+            if (!d) return;
+            config = Object.assign({}, DEFAULT_CONFIG, d);
+            if (config.mutedDate !== todayKey()) {
+              config.mutedToday = {};
+              config.mutedDate = '';
+            }
+            renderAll();
+          })
+        .subscribe();
+
+      sb.channel('new_triggers')
+        .on('postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'triggers' },
+          payload => {
+            const row = payload.new;
+            if (!row || !row.id) return;
+            if (seenTriggers.has(row.id)) return;
+            seenTriggers.add(row.id);
+            if (!row.created_at || (Date.now() - Number(row.created_at)) > 90000) return;
+            if (row.prayer) notifyPrayer(row.prayer, 'manual');
+          })
+        .subscribe();
+
+      renderFooter();
+      renderAll();
+    } catch (e) {
+      console.error('db init failed', e);
+      $('footer-sync').textContent = 'local only';
+    }
+  }
+
+  async function sendTrigger(prayer) {
+    try {
+      if (sb) {
+        await sb.from('triggers').insert({ prayer, created_at: Date.now() });
+      } else {
+        notifyPrayer(prayer, 'manual');
+      }
+    } catch (e) {
+      console.error('trigger failed', e);
+      notifyPrayer(prayer, 'manual');
+    }
+  }
+
+  async function toggleMute(prayer) {
+    const key = todayKey();
+    const current = (config.mutedDate === key) ? Object.assign({}, config.mutedToday) : {};
+    current[prayer] = !current[prayer];
+    config.mutedToday = current;
+    config.mutedDate = key;
+    if (sb) {
+      try { await sb.from('config').upsert({ id: 'main', data: config }); } catch (_) {}
+    }
+    renderAll();
+    renderAdminControls();
+  }
+
+  async function saveSettings() {
+    const lat = parseFloat($('setting-lat').value);
+    const lon = parseFloat($('setting-lon').value);
+    const method = $('setting-method').value;
+    const lead = Math.max(0, Math.min(60, parseInt($('setting-lead').value, 10) || 5));
+    const passcode = $('setting-passcode').value;
+    const presetName = $('setting-city').value;
+    if (!isFinite(lat) || !isFinite(lon)) {
+      $('save-status').textContent = 'Need valid latitude and longitude.';
+      $('save-status').classList.add('err');
+      return;
+    }
+    const locationName = presetName === 'Custom' ? (lat.toFixed(2) + ', ' + lon.toFixed(2)) : presetName.split(',')[0];
+    const jamaat = collectJamaatFromForm();
+    const next = Object.assign({}, config, { lat, lon, method, leadMinutes: lead, adminPasscode: passcode, locationName, jamaat });
+    config = next;
+    if (sb) {
+      try {
+        const { error } = await sb.from('config').upsert({ id: 'main', data: next });
+        if (error) throw error;
+        $('save-status').textContent = 'Saved — your group will update.';
+        $('save-status').classList.add('ok');
+      } catch (e) {
+        $('save-status').textContent = 'Could not sync (saved locally for this session).';
+        $('save-status').classList.add('err');
+      }
+    } else {
+      $('save-status').textContent = 'Saved locally — Supabase not connected.';
+    }
+    renderAll();
+  }
+
+  function openAdmin() {
+    if (config.adminPasscode) {
+      $('passcode-modal').hidden = false;
+      $('passcode-input').value = '';
+      setTimeout(() => $('passcode-input').focus(), 10);
+    } else {
+      enterAdmin();
+    }
+  }
+  function enterAdmin() {
+    isAdmin = true;
+    $('admin-panel').hidden = false;
+    renderAdminControls();
+    $('admin-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function exitAdmin() {
+    isAdmin = false;
+    $('admin-panel').hidden = true;
+  }
+
+  function wire() {
+    $('admin-btn').addEventListener('click', openAdmin);
+    $('exit-admin').addEventListener('click', exitAdmin);
+    $('save-settings').addEventListener('click', saveSettings);
+    $('banner-close').addEventListener('click', () => { $('banner').hidden = true; });
+    $('notification-status').addEventListener('click', () => requestNotificationPerm(true));
+    $('passcode-ok').addEventListener('click', () => {
+      const input = $('passcode-input').value;
+      if (input === config.adminPasscode) {
+        $('passcode-modal').hidden = true;
+        enterAdmin();
+      } else {
+        const el = $('passcode-input');
+        el.classList.remove('wrong-shake');
+        void el.offsetWidth;
+        el.classList.add('wrong-shake');
+        setTimeout(() => el.classList.remove('wrong-shake'), 400);
+      }
+    });
+    $('passcode-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') $('passcode-ok').click();
+    });
+    $('passcode-cancel').addEventListener('click', () => {
+      $('passcode-modal').hidden = true;
+    });
+    document.addEventListener('change', e => {
+      if (e.target && e.target.id === 'setting-city') {
+        const key = $('setting-city').value;
+        if (PRESETS[key]) {
+          $('setting-lat').value = PRESETS[key][0];
+          $('setting-lon').value = PRESETS[key][1];
+          $('setting-method').value = PRESETS[key][2];
+        }
+      }
+    });
+  }
+
+  async function boot() {
+    wire();
+    renderAll();
+    requestNotificationPerm(false);
+    setInterval(() => {
+      renderHero();
+      renderPrayerList();
+    }, 1000);
+    initDb();
+  }
+
+  function waitForAdhan(cb) {
+    if (typeof adhan !== 'undefined' && adhan.CalculationMethod && adhan.Coordinates) {
+      cb();
+    } else {
+      let tries = 0;
+      const check = setInterval(() => {
+        tries++;
+        if (typeof adhan !== 'undefined' && adhan.CalculationMethod) {
+          clearInterval(check);
+          cb();
+        } else if (tries > 100) {
+          clearInterval(check);
+          $('next-name').textContent = 'Prayer-time library did not load';
+          $('next-time').textContent = 'Reload the page';
+        }
+      }, 50);
+    }
+  }
+
+  waitForAdhan(boot);
+})();
+</script>
+</body>
+</html>
