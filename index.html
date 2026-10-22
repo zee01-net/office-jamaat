@@ -1,326 +1,742 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Office Jamaat</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
-  /* Layout: single ornamented column — the hero reads as an illuminated page,
-     prayer times as a tabular index. Each prayer in English and Arabic (Amiri).
-     The Rub-el-Hizb (8-point star) is the indicator; gold carries the ornament. */
+  /* ======================================================================
+     DESIGN SYSTEM
+     --------------------------------------------------------------------
+     COLOUR     purple family (original) + black for emphasis + gold ornament
+     TYPE       Poppins (ui), Amiri (Arabic), JetBrains Mono (numbers)
+     SPACE      4-pt scale
+     RADIUS     8 / 14 / 20 / 26 / 32
+     ICONS      1.75-stroke outline, 24-viewBox, line-join round
+     MOTION     spring 180ms / 280ms; stagger 60ms; respect reduced-motion
+     ====================================================================== */
   :root {
-    --bg: #F7EEFF;
+    /* colour */
+    --bg: #F2E8FB;
+    --bg-grad-1: #F7EEFF;
+    --bg-grad-2: #ECE0F9;
     --surface: #FFFFFF;
-    --surface-raised: #FBF5FF;
+    --surface-raised: #FBF6FF;
+    --surface-sunk: #F7EEFF;
     --fg: #2A1757;
     --fg-soft: #574481;
     --muted: #8578A8;
-    --border: #E6D4FF;
-    --border-strong: #D0A2FF;
+    --border: #ECDEFB;
+    --border-strong: #D6BEF2;
     --accent: #7A3EDB;
+    --accent-2: #B07FFF;
     --accent-soft: #E6D4FF;
     --accent-ink: #3F1F8A;
+    --black: #0D0A14;
+    --black-soft: #1C1627;
+    --black-raised: #272035;
+    --on-black: #F6F0FF;
+    --on-black-muted: #9B86C2;
+    --on-black-border: #2E2740;
     --gold: #B8914A;
     --gold-soft: rgba(184, 145, 74, 0.1);
     --success: #2E8B57;
     --warn: #C06A3A;
     --danger: #B33A5A;
 
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 12px;
-    --space: 16px;
-    --space-lg: 20px;
-    --space-xl: 24px;
-    --space-2xl: 32px;
+    /* space (4pt) */
+    --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+    --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px; --s-9: 56px;
 
-    --radius-sm: 4px;
-    --radius: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    /* radius */
+    --r-1: 8px; --r-2: 14px; --r-3: 20px; --r-4: 26px; --r-5: 32px;
 
+    /* type */
     --body: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --display: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --arabic: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Al Bayan', serif;
+    --arabic: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif;
     --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
-    --t: 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
-    color-scheme: light;
+    /* elevation */
+    --sh-1: 0 1px 2px rgba(42, 23, 87, 0.04);
+    --sh-2: 0 1px 2px rgba(42, 23, 87, 0.04), 0 8px 24px -12px rgba(42, 23, 87, 0.12);
+    --sh-3: 0 2px 4px rgba(42, 23, 87, 0.05), 0 18px 40px -20px rgba(122, 62, 219, 0.22);
+    --sh-black: 0 4px 10px rgba(13, 10, 20, 0.14), 0 24px 48px -24px rgba(13, 10, 20, 0.5);
+
+    /* motion */
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --t-fast: 150ms;
+    --t: 220ms;
+    --t-slow: 420ms;
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #130826;
-      --surface: #1E1138;
-      --surface-raised: #291A4A;
-      --fg: #F3E6FF;
-      --fg-soft: #D0A2FF;
-      --muted: #9B86C2;
-      --border: #3A2865;
-      --border-strong: #574481;
-      --accent: #DC9FFF;
-      --accent-soft: #2E1C56;
-      --accent-ink: #F3E6FF;
-      --gold: #D4B687;
-      --gold-soft: rgba(212, 182, 135, 0.12);
-      --success: #6FD39A;
-      --warn: #E89C72;
-      --danger: #E07A9A;
-      color-scheme: dark;
+    :root:not([data-theme="light"]) { color-scheme: dark;
+      --bg: #0F0620; --bg-grad-1: #140828; --bg-grad-2: #0A0416;
+      --surface: #1E1138; --surface-raised: #291A4A; --surface-sunk: #150828;
+      --fg: #F3E6FF; --fg-soft: #D0A2FF; --muted: #9B86C2;
+      --border: #3A2865; --border-strong: #574481;
+      --accent: #DC9FFF; --accent-2: #F3E6FF; --accent-soft: #2E1C56; --accent-ink: #F3E6FF;
+      --black: #050308; --black-soft: #0F0A17; --black-raised: #1A1428;
+      --on-black: #F3E6FF; --on-black-muted: #9B86C2; --on-black-border: #251A3A;
+      --gold: #D4B687; --success: #6FD39A; --warn: #E89C72; --danger: #E07A9A;
+      --sh-2: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.6);
+      --sh-3: 0 2px 4px rgba(0,0,0,.5), 0 20px 44px -22px rgba(0,0,0,.7);
+      --sh-black: 0 6px 14px rgba(0,0,0,.6), 0 28px 56px -28px rgba(0,0,0,.8);
     }
   }
-  :root[data-theme="dark"] {
-    --bg: #130826;
-    --surface: #1E1138;
-    --surface-raised: #291A4A;
-    --fg: #F3E6FF;
-    --fg-soft: #D0A2FF;
-    --muted: #9B86C2;
-    --border: #3A2865;
-    --border-strong: #574481;
-    --accent: #DC9FFF;
-    --accent-soft: #2E1C56;
-    --accent-ink: #F3E6FF;
-    --gold: #D4B687;
-    --gold-soft: rgba(212, 182, 135, 0.12);
-    --success: #6FD39A;
-    --warn: #E89C72;
-    --danger: #E07A9A;
-    color-scheme: dark;
+  :root[data-theme="dark"] { color-scheme: dark;
+    --bg: #0F0620; --bg-grad-1: #140828; --bg-grad-2: #0A0416;
+    --surface: #1E1138; --surface-raised: #291A4A; --surface-sunk: #150828;
+    --fg: #F3E6FF; --fg-soft: #D0A2FF; --muted: #9B86C2;
+    --border: #3A2865; --border-strong: #574481;
+    --accent: #DC9FFF; --accent-2: #F3E6FF; --accent-soft: #2E1C56; --accent-ink: #F3E6FF;
+    --black: #050308; --black-soft: #0F0A17; --black-raised: #1A1428;
+    --on-black: #F3E6FF; --on-black-muted: #9B86C2; --on-black-border: #251A3A;
+    --gold: #D4B687; --success: #6FD39A; --warn: #E89C72; --danger: #E07A9A;
+    --sh-2: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.6);
+    --sh-3: 0 2px 4px rgba(0,0,0,.5), 0 20px 44px -22px rgba(0,0,0,.7);
+    --sh-black: 0 6px 14px rgba(0,0,0,.6), 0 28px 56px -28px rgba(0,0,0,.8);
   }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
   body {
-    background: var(--bg);
+    background:
+      radial-gradient(ellipse 70% 50% at 15% 0%, var(--bg-grad-1), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 95% 100%, var(--accent-soft), transparent 55%),
+      var(--bg);
+    background-attachment: fixed;
     color: var(--fg);
     font-family: var(--body);
     font-size: 14px;
-    line-height: 1.57;
-    font-weight: 400;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
-    padding-block: 24px 48px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
+  [hidden] { display: none !important; }
 
+  /* -------------- ICONS (consistent sprite) -------------- */
+  .icon { width: 22px; height: 22px; display: inline-block; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-sm { width: 16px; height: 16px; stroke-width: 2; }
+  .icon-lg { width: 28px; height: 28px; }
+
+  /* -------------- APP LAYOUT -------------- */
   .app {
-    max-width: 540px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space);
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    min-height: 100vh;
+    gap: 0;
   }
 
-  .hero {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-xl) var(--space-xl) var(--space-2xl);
+  /* -------------- SIDEBAR -------------- */
+  .sidebar {
+    background: var(--black);
+    color: var(--on-black);
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+    padding: var(--s-5) var(--s-3);
+    gap: var(--s-5);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-right: 1px solid var(--on-black-border);
+    z-index: 10;
   }
-  .hero::before {
+  .sidebar-logo {
+    width: 48px; height: 48px;
+    border-radius: var(--r-2);
+    background: var(--black-raised);
+    border: 1px solid var(--on-black-border);
+    display: grid; place-items: center;
+    color: var(--gold);
+    animation: logo-in 600ms var(--spring) both;
+  }
+  .sidebar-logo .rub { width: 22px; height: 22px; }
+  @keyframes logo-in {
+    from { transform: rotate(-180deg) scale(0.5); opacity: 0; }
+    to { transform: rotate(0) scale(1); opacity: 1; }
+  }
+  .sidebar-nav {
+    display: flex; flex-direction: column; gap: var(--s-1);
+    align-items: center;
+    flex: 1;
+    width: 100%;
+  }
+  .nav-btn {
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    background: transparent;
+    border: none;
+    color: var(--on-black-muted);
+    border-radius: var(--r-2);
+    cursor: pointer;
+    font-family: inherit;
+    position: relative;
+    transition: color var(--t) var(--ease), background var(--t) var(--ease), transform var(--t) var(--spring);
+  }
+  .nav-btn::before {
     content: "";
     position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='%237A3EDB' opacity='0.055'><rect x='24' y='24' width='12' height='12'/><g transform='translate(30 30) rotate(45) translate(-6 -6)'><rect x='0' y='0' width='12' height='12'/></g></g></svg>");
-    background-repeat: repeat;
-    background-position: center;
+    left: -12px; top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 3px; height: 24px;
+    background: var(--accent);
+    border-radius: 0 3px 3px 0;
+    transition: transform var(--t) var(--spring);
+  }
+  .nav-btn:hover { color: var(--on-black); background: var(--black-raised); }
+  .nav-btn.active {
+    color: var(--on-black);
+    background: var(--black-raised);
+  }
+  .nav-btn.active::before { transform: translateY(-50%) scaleY(1); }
+  .nav-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .nav-btn[data-badge]::after {
+    content: attr(data-badge);
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 999px;
+    border: 2px solid var(--black);
+    font-size: 0;
+  }
+  .nav-tooltip {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    background: var(--black-raised);
+    color: var(--on-black);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
     pointer-events: none;
-    z-index: 0;
+    opacity: 0;
+    transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+    z-index: 20;
+    border: 1px solid var(--on-black-border);
   }
-  .hero > * { position: relative; z-index: 1; }
+  .nav-btn:hover .nav-tooltip { opacity: 1; transform: translateY(-50%) translateX(0); }
+  .sidebar-foot {
+    width: 48px; height: 48px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-ink));
+    display: grid; place-items: center;
+    color: var(--on-black);
+    cursor: pointer;
+    transition: transform var(--t) var(--spring);
+  }
+  .sidebar-foot:hover { transform: scale(1.06) rotate(-4deg); }
 
-  .hero-crown {
-    color: var(--gold);
-    margin-bottom: var(--space-md);
+  /* -------------- MAIN -------------- */
+  .main {
+    padding: var(--s-6) var(--s-6) var(--s-8);
     display: flex;
-    align-items: center;
-    gap: var(--space-sm);
+    flex-direction: column;
+    gap: var(--s-5);
+    min-width: 0;
+    max-width: 1140px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fade-in var(--t-slow) var(--ease) both;
   }
-  .hero-crown .rub { width: 16px; height: 16px; }
-  .hero-crown .crown-line {
-    width: 44px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold), transparent);
-  }
+  @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  .eyebrow {
-    font-size: 11px;
-    line-height: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    font-weight: 500;
+  /* top bar */
+  .top-bar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-4);
+    flex-wrap: wrap;
   }
-  .hijri {
-    font-family: var(--arabic);
-    font-size: 18px;
-    line-height: 24px;
-    color: var(--fg-soft);
-    margin-top: 4px;
-    direction: rtl;
-    font-weight: 400;
-  }
-
-  .next-label {
-    font-size: 11px;
-    line-height: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    font-weight: 500;
-    margin-top: var(--space-lg);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
-  .next-label::before, .next-label::after {
-    content: "";
-    width: 24px;
-    height: 1px;
-    background: var(--border-strong);
-  }
-  .next-name {
-    font-family: var(--display);
-    font-size: 36px;
-    line-height: 44px;
-    letter-spacing: -0.015em;
-    font-weight: 600;
+  .top-bar h1 {
+    font-size: 42px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    margin: 2px 0 0;
     color: var(--fg);
-    margin-top: var(--space-sm);
-    text-wrap: balance;
   }
-  .next-arabic {
-    font-family: var(--arabic);
-    font-size: 48px;
-    line-height: 56px;
-    color: var(--accent);
-    margin-top: 2px;
-    direction: rtl;
-    font-weight: 400;
-    letter-spacing: 0;
-  }
-  .next-time {
-    font-family: var(--mono);
-    font-size: 20px;
-    line-height: 28px;
-    font-weight: 500;
-    color: var(--fg-soft);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    margin-top: var(--space-sm);
-  }
-  .next-start {
-    font-family: var(--mono);
-    font-size: 12px;
-    line-height: 18px;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-    margin-top: 2px;
-    letter-spacing: 0.02em;
-  }
-  .countdown {
-    margin-top: var(--space);
+  .top-bar h1 .accent-blob {
     display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-sm);
-    padding: 7px 16px;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
     background: var(--accent-soft);
     color: var(--accent-ink);
     border-radius: 999px;
-    font-weight: 600;
-    font-size: 13px;
-    line-height: 20px;
-    font-variant-numeric: tabular-nums;
-    transition: background var(--t), color var(--t);
+    margin: 0 6px;
+    vertical-align: middle;
+    animation: blob-breathe 4s ease-in-out infinite;
   }
-  .countdown.imminent { background: var(--accent); color: var(--surface); }
-
-  .section-title {
-    font-size: 11px;
-    line-height: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    font-weight: 500;
-    margin: var(--space-xs) var(--space-xs) var(--space-sm);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--space-md);
-  }
-  .section-title .section-ornament {
+  .top-bar h1 .accent-blob .rub { width: 20px; height: 20px; color: var(--gold); }
+  .top-bar h1 .dark-blob {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-sm);
-    color: var(--gold);
+    gap: 6px;
+    background: var(--black);
+    color: var(--on-black);
+    border-radius: 999px;
+    padding: 2px 16px 2px 10px;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 4px;
+    vertical-align: middle;
+    letter-spacing: -0.01em;
   }
-  .section-ornament .rub { width: 10px; height: 10px; }
-
-  .prayer-list {
+  .top-bar h1 .dark-blob .icon { width: 20px; height: 20px; stroke-width: 2; }
+  @keyframes blob-breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  .top-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .top-eyebrow .pulse-dot {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--accent);
+    animation: pulse-dot 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+    50% { box-shadow: 0 0 0 7px transparent; }
+  }
+  .top-actions {
     display: flex;
-    flex-direction: column;
+    gap: var(--s-2);
+    align-items: center;
+  }
+
+  /* chip (floating pill button) */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: 10px var(--s-4);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-soft);
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: var(--sh-1);
+    transition: all var(--t) var(--ease);
+    letter-spacing: 0.01em;
+  }
+  .chip:hover { transform: translateY(-1px); box-shadow: var(--sh-2); color: var(--fg); border-color: var(--border-strong); }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .chip-dark {
+    background: var(--black);
+    color: var(--on-black);
+    border-color: var(--on-black-border);
+    font-weight: 600;
+    padding: 10px var(--s-4) 10px 10px;
+  }
+  .chip-dark:hover { color: var(--on-black); background: var(--black-soft); }
+  .chip-dark .icon-slot {
+    width: 24px; height: 24px;
+    background: var(--black-raised);
+    border-radius: 999px;
+    display: grid; place-items: center;
+    color: var(--on-black);
+  }
+  .chip-arabic {
+    font-family: var(--arabic);
+    font-size: 16px;
+    color: var(--fg-soft);
+    direction: rtl;
+    font-weight: 400;
+  }
+  .chip-status {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--muted);
+    display: inline-block;
+  }
+  .chip-status.on { background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent); }
+  .chip-status.warn { background: var(--warn); }
+
+  /* pill tabs */
+  .pill-tabs {
+    display: inline-flex;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: var(--sh-1);
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .pill-tabs::-webkit-scrollbar { display: none; }
+  .pill-tab {
+    padding: 10px 18px;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition: all var(--t) var(--ease);
+  }
+  .pill-tab:hover { color: var(--fg); }
+  .pill-tab.active {
+    background: var(--black);
+    color: var(--on-black);
+    font-weight: 600;
+    box-shadow: var(--sh-1);
+  }
+  .pill-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* bento grid */
+  .bento {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: var(--s-4);
+  }
+  @media (max-width: 820px) { .bento { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-4);
+    box-shadow: var(--sh-2);
+    padding: var(--s-6);
+    position: relative;
+    overflow: hidden;
+    animation: card-in var(--t-slow) var(--spring) both;
+  }
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card:nth-child(2) { animation-delay: 60ms; }
+  .card:nth-child(3) { animation-delay: 120ms; }
+  .card:nth-child(4) { animation-delay: 180ms; }
+
+  /* hero card */
+  .hero-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: var(--s-4);
+    min-height: 320px;
+    background:
+      radial-gradient(ellipse 80% 60% at 100% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
+      var(--surface);
+  }
+  .hero-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='%237A3EDB' opacity='0.04'><rect x='24' y='24' width='12' height='12'/><g transform='translate(30 30) rotate(45) translate(-6 -6)'><rect x='0' y='0' width='12' height='12'/></g></g></svg>");
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-card > * { position: relative; z-index: 1; }
+  .hero-body { display: flex; flex-direction: column; gap: var(--s-3); min-width: 0; }
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .hero-eyebrow .dash {
+    width: 24px; height: 1px; background: var(--border-strong);
+  }
+  .next-name {
+    font-size: 60px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    color: var(--fg);
+    margin: 0;
+    text-wrap: balance;
+    animation: text-slide var(--t-slow) var(--spring) both;
+  }
+  @keyframes text-slide {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .next-arabic {
+    font-family: var(--arabic);
+    font-size: 56px;
+    line-height: 1;
+    color: var(--accent);
+    direction: rtl;
+    font-weight: 400;
+    margin-top: -4px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: var(--s-5);
+    margin-top: var(--s-3);
+    flex-wrap: wrap;
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .hero-meta-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .hero-meta-val {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+  }
+  .hero-meta-val.accent { color: var(--accent); }
+  .hero-crown-mini {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px; height: 56px;
+    background: var(--black);
+    color: var(--gold);
+    border-radius: var(--r-2);
+    position: relative;
     overflow: hidden;
   }
-  .prayer-row {
+  .hero-crown-mini::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--gold) 30%, transparent), transparent 70%);
+  }
+  .hero-crown-mini .rub { width: 24px; height: 24px; position: relative; z-index: 1; }
+
+  /* timer card */
+  .timer-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    align-items: center;
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
+      var(--surface);
+  }
+  .timer-head {
+    width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .timer-head-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .timer-head-icon {
+    width: 32px; height: 32px;
+    background: var(--surface-sunk);
+    border-radius: 999px;
+    display: grid; place-items: center;
+    color: var(--accent-ink);
+  }
+  .timer-ring-wrap {
+    position: relative;
+    width: 190px; height: 190px;
+    margin: var(--s-1) 0;
+  }
+  .timer-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .timer-ring .track {
+    fill: none;
+    stroke: var(--surface-sunk);
+    stroke-width: 10;
+  }
+  .timer-ring .progress {
+    fill: none;
+    stroke: url(#ringGrad);
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 534.07;
+    stroke-dashoffset: 534.07;
+    transition: stroke-dashoffset 1s linear;
+  }
+  .timer-ring .tick {
+    stroke: var(--border-strong);
+    stroke-width: 1;
+  }
+  .timer-center {
+    position: absolute;
+    inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px;
+  }
+  .timer-digits {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .timer-sub {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .timer-foot {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--s-2);
+    padding: 8px 16px;
+    background: var(--black);
+    color: var(--on-black);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    transition: all var(--t) var(--ease);
+  }
+  .timer-foot.imminent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-ink));
+    animation: pulse-glow 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent); }
+    50% { box-shadow: 0 0 0 10px transparent; }
+  }
+
+  /* schedule */
+  .schedule-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    margin: var(--s-3) 0 var(--s-1);
+  }
+  .schedule-title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--fg);
+  }
+  .schedule-title .ornament {
+    width: 28px; height: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: grid; place-items: center;
+    color: var(--gold);
+    box-shadow: var(--sh-1);
+  }
+  .schedule-title .ornament .rub { width: 12px; height: 12px; }
+  .schedule-note {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  .prayer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+  .prayer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-3);
+    box-shadow: var(--sh-1);
+    padding: 14px var(--s-5);
     display: grid;
     grid-template-columns: auto 1fr auto auto;
     align-items: center;
-    gap: var(--space);
-    padding: 14px var(--space-lg);
-    border-bottom: 1px solid var(--border);
+    gap: var(--s-4);
     min-width: 0;
     position: relative;
-    transition: background var(--t);
+    overflow: hidden;
+    transition: all var(--t) var(--ease);
+    animation: card-in var(--t-slow) var(--spring) both;
   }
-  .prayer-row:last-child { border-bottom: none; }
-  .prayer-row.active {
-    background: linear-gradient(90deg, var(--accent-soft), transparent 85%);
+  .prayer-card:nth-child(1) { animation-delay: 120ms; }
+  .prayer-card:nth-child(2) { animation-delay: 180ms; }
+  .prayer-card:nth-child(3) { animation-delay: 240ms; }
+  .prayer-card:nth-child(4) { animation-delay: 300ms; }
+  .prayer-card:nth-child(5) { animation-delay: 360ms; }
+  .prayer-card:hover { transform: translateY(-1px); box-shadow: var(--sh-2); border-color: var(--border-strong); }
+  .prayer-card.passed { opacity: 0.52; }
+  .prayer-card.passed:hover { transform: none; }
+  .prayer-card.active {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, var(--surface)), var(--surface) 60%);
+    border-color: var(--accent);
+    box-shadow: var(--sh-3);
+    transform: translateY(-1px);
   }
-  .prayer-row.passed { opacity: 0.55; }
-
+  .prayer-card.active::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-ink));
+  }
   .prayer-indicator {
-    width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 44px; height: 44px;
+    border-radius: var(--r-2);
+    display: grid; place-items: center;
     color: var(--border-strong);
-    transition: color var(--t);
+    background: var(--surface-sunk);
+    transition: all var(--t) var(--ease);
   }
-  .prayer-indicator .rub {
-    width: 13px; height: 13px;
-    transition: width var(--t), height var(--t);
+  .prayer-indicator .rub { width: 16px; height: 16px; transition: all var(--t) var(--spring); }
+  .prayer-card.active .prayer-indicator {
+    color: var(--gold);
+    background: var(--black);
   }
-  .prayer-row.active .prayer-indicator { color: var(--accent); }
-  .prayer-row.active .prayer-indicator .rub { width: 20px; height: 20px; }
+  .prayer-card.active .prayer-indicator .rub {
+    width: 20px; height: 20px;
+    animation: rub-rotate 8s linear infinite;
+  }
+  @keyframes rub-rotate { to { transform: rotate(45deg); } }
 
-  .prayer-labels {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    min-width: 0;
-  }
+  .prayer-labels { display: flex; flex-direction: column; min-width: 0; }
   .prayer-name {
     font-size: 18px;
     line-height: 24px;
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: -0.005em;
     color: var(--fg);
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--s-2);
     flex-wrap: wrap;
   }
   .prayer-arabic {
@@ -332,644 +748,676 @@
     font-weight: 400;
     margin-top: -2px;
   }
-  .prayer-row.active .prayer-arabic { color: var(--accent); }
-
+  .prayer-card.active .prayer-arabic { color: var(--accent); }
   .mute-badge {
     font-size: 10px;
-    line-height: 16px;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--warn);
     font-weight: 600;
-    padding: 2px 6px;
-    background: color-mix(in srgb, var(--warn) 15%, transparent);
-    border-radius: var(--radius-sm);
+    padding: 2px 8px;
+    background: color-mix(in srgb, var(--warn) 14%, transparent);
+    border-radius: 999px;
   }
   .prayer-sub {
     font-size: 10px;
-    line-height: 14px;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--muted);
-    font-weight: 500;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--surface-sunk);
   }
-  .prayer-row.active .prayer-sub { color: var(--accent); }
-  .prayer-times {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    min-width: 0;
+  .prayer-card.active .prayer-sub {
+    color: var(--on-black);
+    background: var(--black);
   }
+  .prayer-card.passed .prayer-sub {
+    background: transparent;
+    color: var(--muted);
+  }
+  .prayer-times { display: flex; flex-direction: column; align-items: flex-end; }
   .prayer-time {
     font-family: var(--mono);
-    font-size: 15px;
-    line-height: 20px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
     color: var(--fg-soft);
     font-variant-numeric: tabular-nums;
   }
-  .prayer-row.active .prayer-time { color: var(--accent); font-weight: 600; }
+  .prayer-card.active .prayer-time { color: var(--fg); font-weight: 700; font-size: 17px; }
   .prayer-start {
     font-family: var(--mono);
     font-size: 10px;
-    line-height: 14px;
     color: var(--muted);
     font-variant-numeric: tabular-nums;
     margin-top: 1px;
     letter-spacing: 0.02em;
   }
 
+  /* banner */
   .banner {
-    background: var(--accent);
-    color: var(--surface);
-    padding: var(--space-lg);
-    border-radius: var(--radius-lg);
+    background: var(--black);
+    color: var(--on-black);
+    padding: var(--s-5);
+    border-radius: var(--r-3);
+    box-shadow: var(--sh-black);
     display: flex;
     align-items: center;
-    gap: var(--space);
-    animation: pulse 2s ease-in-out infinite;
+    gap: var(--s-4);
     position: relative;
     overflow: hidden;
+    animation: banner-in 400ms var(--spring);
+  }
+  @keyframes banner-in {
+    from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
   .banner::before {
     content: "";
     position: absolute;
     inset: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='white' opacity='0.07'><rect x='24' y='24' width='12' height='12'/><g transform='translate(30 30) rotate(45) translate(-6 -6)'><rect x='0' y='0' width='12' height='12'/></g></g></svg>");
-    background-repeat: repeat;
+    background: radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%);
     pointer-events: none;
   }
-  .banner > * { position: relative; z-index: 1; }
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
-    50% { box-shadow: 0 0 0 10px transparent; }
+  .banner-icon {
+    position: relative; z-index: 1;
+    width: 44px; height: 44px;
+    border-radius: var(--r-2);
+    background: var(--black-raised);
+    border: 1px solid var(--on-black-border);
+    display: grid; place-items: center;
+    color: var(--accent);
+    animation: ring 1.4s ease-in-out infinite;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .banner { animation: none; }
-    .countdown, .prayer-row, .prayer-indicator { transition: none; }
+  @keyframes ring {
+    0%, 100% { transform: rotate(0); }
+    10%, 30% { transform: rotate(-14deg); }
+    20%, 40% { transform: rotate(14deg); }
+    50% { transform: rotate(0); }
   }
-  .banner-body { flex: 1; min-width: 0; }
+  .banner-body { flex: 1; min-width: 0; position: relative; z-index: 1; }
   .banner-title {
     font-size: 18px;
     line-height: 24px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.01em;
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--s-2);
+    flex-wrap: wrap;
   }
   .banner-arabic {
     font-family: var(--arabic);
     font-size: 20px;
-    line-height: 24px;
-    font-weight: 400;
     direction: rtl;
+    color: var(--accent);
   }
-  .banner-msg { font-size: 13px; line-height: 20px; opacity: 0.92; margin-top: 2px; }
+  .banner-msg { font-size: 13px; opacity: 0.85; margin-top: 2px; }
   .banner-close {
+    position: relative; z-index: 1;
     background: transparent;
-    border: 1px solid currentColor;
+    border: 1px solid var(--on-black-border);
     color: inherit;
     border-radius: 999px;
-    padding: 6px 14px;
+    padding: 8px 16px;
     font-size: 12px;
     font-weight: 500;
-    line-height: 18px;
     cursor: pointer;
     font-family: inherit;
-    transition: background var(--t);
+    transition: all var(--t) var(--ease);
   }
-  .banner-close:hover { background: color-mix(in srgb, currentColor 18%, transparent); }
+  .banner-close:hover { background: var(--black-raised); border-color: var(--on-black); }
 
-  .admin-toggle { display: flex; justify-content: center; margin-top: var(--space-xs); }
-  .admin-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 8px var(--space);
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 18px;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    font-family: inherit;
-    transition: color var(--t), border-color var(--t), background var(--t);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
-  .admin-btn .rub { width: 10px; height: 10px; color: var(--gold); }
-  .admin-btn:hover { color: var(--fg); border-color: var(--border-strong); background: var(--surface); }
-  .admin-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  .admin-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-xl);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
-  }
+  /* admin cards */
+  .admin-panel { display: flex; flex-direction: column; gap: var(--s-4); }
   .admin-section h3 {
-    font-family: var(--body);
-    font-size: 11px;
-    line-height: 16px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.18em;
     color: var(--muted);
-    font-weight: 500;
-    margin: 0 0 var(--space-md);
+    font-weight: 700;
+    margin: 0 0 var(--s-3);
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--s-2);
   }
-  .admin-section h3::before {
-    content: "";
-    width: 6px; height: 6px;
-    background: var(--gold);
-    transform: rotate(45deg);
-    display: inline-block;
-  }
+  .admin-section h3 .icon { width: 18px; height: 18px; color: var(--accent); }
 
   .call-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: var(--space-sm);
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--s-2);
   }
   .call-btn {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: var(--space-md) var(--space);
+    padding: var(--s-4);
     background: var(--surface-raised);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: var(--r-2);
     cursor: pointer;
     font-family: inherit;
     text-align: left;
-    gap: 2px;
-    transition: border-color var(--t), color var(--t), transform var(--t);
-    min-width: 0;
+    gap: 4px;
+    transition: all var(--t) var(--ease);
     position: relative;
+    overflow: hidden;
   }
-  .call-btn:hover { border-color: var(--accent); }
-  .call-btn:active { transform: translateY(1px); }
+  .call-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity var(--t) var(--ease);
+    pointer-events: none;
+  }
+  .call-btn:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--sh-2); }
+  .call-btn:hover::after { opacity: 0.06; }
+  .call-btn:active { transform: translateY(0); }
   .call-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .call-btn-row {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-sm);
-    width: 100%;
-  }
-  .call-btn-name {
-    font-size: 16px; line-height: 22px; font-weight: 600; color: var(--fg);
-    transition: color var(--t); letter-spacing: -0.005em;
-  }
+  .call-btn-row { display: flex; align-items: baseline; gap: var(--s-2); width: 100%; }
+  .call-btn-name { font-size: 16px; font-weight: 700; color: var(--fg); letter-spacing: -0.005em; }
   .call-btn-arabic {
     font-family: var(--arabic);
-    font-size: 18px;
-    line-height: 22px;
-    color: var(--muted);
-    direction: rtl;
-    margin-left: auto;
+    font-size: 18px; color: var(--muted);
+    direction: rtl; margin-left: auto;
   }
   .call-btn-sub {
-    font-size: 10px; line-height: 14px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500;
-    margin-top: 2px;
+    font-size: 10px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 4px;
   }
-  .call-btn:hover .call-btn-name { color: var(--accent); }
-  .call-btn:hover .call-btn-arabic { color: var(--accent); }
+  .call-btn-sub::before {
+    content: ""; width: 6px; height: 6px; border-radius: 999px;
+    background: var(--accent); display: inline-block;
+  }
 
-  /* Jamaat time editor */
-  .jamaat-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-  }
+  .jamaat-section { display: flex; flex-direction: column; gap: var(--s-1); }
   .jamaat-row {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: var(--space-md);
+    gap: var(--s-3);
     align-items: center;
-    padding: var(--space-sm) var(--space-md);
+    padding: 10px var(--s-4);
     background: var(--surface-raised);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: var(--r-2);
+    transition: all var(--t) var(--ease);
   }
-  .jamaat-head {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-sm);
-    min-width: 0;
-  }
-  .jamaat-eng {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--fg);
-  }
-  .jamaat-ar {
-    font-family: var(--arabic);
-    font-size: 16px;
-    color: var(--muted);
-    direction: rtl;
-  }
-  .jamaat-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
+  .jamaat-row:hover { border-color: var(--border-strong); }
+  .jamaat-head { display: flex; align-items: baseline; gap: var(--s-2); }
+  .jamaat-eng { font-size: 14px; font-weight: 700; color: var(--fg); }
+  .jamaat-ar { font-family: var(--arabic); font-size: 16px; color: var(--muted); direction: rtl; }
+  .jamaat-controls { display: flex; align-items: center; gap: var(--s-2); }
+
   .segmented {
     display: inline-flex;
-    background: var(--bg);
+    background: var(--surface-sunk);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 999px;
     padding: 2px;
     gap: 2px;
   }
   .seg-btn {
-    background: transparent;
-    border: none;
-    padding: 4px 10px;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-    cursor: pointer;
-    border-radius: 4px;
-    font-family: inherit;
-    min-width: 36px;
-    transition: background var(--t), color var(--t);
+    background: transparent; border: none;
+    padding: 6px 14px;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); cursor: pointer;
+    border-radius: 999px; font-family: inherit;
+    min-width: 44px;
+    transition: all var(--t) var(--ease);
   }
   .seg-btn:hover { color: var(--fg); }
-  .seg-btn.active {
-    background: var(--accent);
-    color: var(--surface);
-  }
+  .seg-btn.active { background: var(--black); color: var(--on-black); }
   .seg-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .jamaat-input {
-    background: var(--bg);
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 6px 8px;
+    border-radius: var(--r-1);
+    padding: 6px 10px;
     font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--fg);
-    width: 76px;
-    min-height: 30px;
-    text-align: center;
+    font-size: 13px; font-weight: 600; color: var(--fg);
+    width: 80px; min-height: 34px; text-align: center;
+    transition: all var(--t) var(--ease);
   }
-  .jamaat-input:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 1px;
-    border-color: var(--accent);
-  }
+  .jamaat-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
 
   .mute-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
-    gap: var(--space-xs);
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--s-1);
   }
   .mute-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: 10px var(--space-md);
+    display: flex; align-items: center; gap: var(--s-2);
+    padding: 11px var(--s-3);
     background: var(--surface-raised);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    line-height: 20px;
-    font-weight: 500;
+    border-radius: var(--r-2);
+    cursor: pointer; font-family: inherit;
+    font-size: 13px; font-weight: 500;
     color: var(--fg-soft);
-    transition: border-color var(--t), color var(--t), background var(--t);
+    transition: all var(--t) var(--ease);
   }
-  .mute-btn:hover { border-color: var(--border-strong); color: var(--fg); }
+  .mute-btn:hover { border-color: var(--border-strong); color: var(--fg); transform: translateY(-1px); }
   .mute-btn.on {
-    background: color-mix(in srgb, var(--warn) 12%, var(--surface-raised));
-    color: var(--warn);
-    border-color: var(--warn);
+    background: color-mix(in srgb, var(--warn) 10%, var(--surface-raised));
+    color: var(--warn); border-color: var(--warn);
   }
   .mute-check {
-    width: 16px; height: 16px;
-    border-radius: var(--radius-sm);
-    border: 1.5px solid var(--border-strong);
-    display: inline-block;
-    position: relative;
+    width: 18px; height: 18px;
+    border-radius: 6px;
+    border: 1.75px solid var(--border-strong);
+    display: inline-block; position: relative;
     flex-shrink: 0;
-    transition: background var(--t), border-color var(--t);
+    transition: all var(--t) var(--ease);
   }
   .mute-btn.on .mute-check { background: var(--warn); border-color: var(--warn); }
   .mute-btn.on .mute-check::after {
     content: "";
     position: absolute;
-    left: 4px; top: 1px;
-    width: 4px; height: 8px;
+    left: 5px; top: 1px;
+    width: 5px; height: 9px;
     border: solid var(--surface);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
   }
 
-  .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-md); }
+  .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--s-3); }
   .form-row:last-child { margin-bottom: 0; }
   .form-row label {
-    font-size: 11px; line-height: 16px;
-    text-transform: uppercase; letter-spacing: 0.14em;
-    color: var(--muted); font-weight: 500;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--muted); font-weight: 700;
   }
   .form-row input, .form-row select {
     background: var(--surface-raised);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 11px 14px;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 22px;
-    font-weight: 400;
-    color: var(--fg);
-    min-height: 44px;
-    transition: border-color var(--t);
+    border-radius: var(--r-2);
+    padding: 12px 16px;
+    font-family: inherit; font-size: 14px; color: var(--fg);
+    min-height: 46px;
+    transition: all var(--t) var(--ease);
   }
   .form-row input::placeholder { color: var(--muted); }
   .form-row input:focus-visible, .form-row select:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 1px;
-    border-color: var(--accent);
+    outline: 2px solid var(--accent); outline-offset: 1px;
+    border-color: var(--accent); background: var(--surface);
   }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
-  @media (max-width: 420px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+  @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
 
   .btn {
-    background: var(--accent);
-    color: var(--surface);
-    border: none;
-    border-radius: var(--radius);
-    padding: 10px var(--space-lg);
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 500;
-    cursor: pointer;
-    min-height: 40px;
-    transition: filter var(--t), transform var(--t);
+    background: var(--black); color: var(--on-black);
+    border: none; border-radius: 999px;
+    padding: 13px var(--s-6);
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; min-height: 48px;
+    letter-spacing: 0.01em;
+    transition: all var(--t) var(--ease);
+    box-shadow: var(--sh-1);
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
   }
-  .btn:hover { filter: brightness(0.95); }
-  .btn:active { transform: translateY(1px); }
+  .btn:hover { filter: brightness(1.2); box-shadow: var(--sh-2); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
   .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn-accent { background: var(--accent); color: var(--surface); }
+  .btn-accent:hover { filter: brightness(0.95); }
   .btn-secondary {
-    background: transparent;
-    color: var(--fg-soft);
-    border: 1px solid var(--border);
+    background: transparent; color: var(--fg-soft);
+    border: 1px solid var(--border); box-shadow: none;
   }
-  .btn-secondary:hover { color: var(--fg); border-color: var(--border-strong); background: var(--surface-raised); }
+  .btn-secondary:hover { color: var(--fg); border-color: var(--border-strong); background: var(--surface-raised); filter: none; }
   .btn-full { width: 100%; }
 
   .save-status {
-    display: inline-flex; align-items: center; gap: var(--space-sm);
-    font-size: 12px; line-height: 18px; font-weight: 500;
-    color: var(--muted); min-height: 20px;
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    min-height: 20px; margin-top: var(--s-2);
   }
   .save-status.ok { color: var(--success); }
   .save-status.err { color: var(--danger); }
 
   .footer {
-    margin-top: var(--space-md);
-    display: flex; flex-direction: column; gap: var(--space-sm);
+    margin-top: var(--s-5);
+    display: flex; flex-direction: column; gap: var(--s-2);
     align-items: center;
     color: var(--muted);
-    font-size: 11px; line-height: 16px; font-weight: 400;
-    letter-spacing: 0.03em;
+    font-size: 11px; letter-spacing: 0.03em;
     text-align: center;
-    padding: 0 var(--space-md);
+    padding: 0 var(--s-3);
   }
-  .footer-ornament {
-    color: var(--gold);
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
+  .footer-ornament { color: var(--gold); display: flex; align-items: center; gap: var(--s-2); }
   .footer-ornament .rub { width: 8px; height: 8px; }
   .footer-ornament .line {
-    width: 32px;
-    height: 1px;
+    width: 32px; height: 1px;
     background: linear-gradient(to right, transparent, var(--gold), transparent);
   }
-  .footer strong { color: var(--fg-soft); font-weight: 500; }
+  .footer strong { color: var(--fg-soft); font-weight: 600; }
 
-  .status-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 10px; line-height: 16px; font-weight: 600;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    cursor: pointer; border: none; font-family: inherit;
-    transition: background var(--t), color var(--t);
-  }
-  .status-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .status-ok { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
-  .status-warn { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
-
+  /* modal */
   .modal-backdrop {
     position: fixed; inset: 0;
-    background: color-mix(in srgb, var(--bg) 70%, transparent);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    display: flex; align-items: center; justify-content: center;
-    padding: var(--space-lg);
-    padding-left: max(var(--space-lg), env(safe-area-inset-left, 0px));
-    padding-right: max(var(--space-lg), env(safe-area-inset-right, 0px));
+    background: color-mix(in srgb, var(--black) 55%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: grid; place-items: center;
+    padding: var(--s-5);
     z-index: 100;
+    animation: fade-in var(--t) var(--ease);
   }
   .modal {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: var(--space-xl);
-    width: 100%;
-    max-width: 380px;
-    display: flex; flex-direction: column; gap: var(--space-md);
-    box-shadow: 0 20px 50px -20px color-mix(in srgb, var(--accent) 25%, transparent);
-    position: relative;
+    border-radius: var(--r-4);
+    padding: var(--s-6);
+    width: 100%; max-width: 400px;
+    display: flex; flex-direction: column; gap: var(--s-3);
+    box-shadow: var(--sh-3);
+    animation: card-in var(--t) var(--spring);
   }
   .modal-crown {
-    display: flex;
-    justify-content: center;
+    display: flex; justify-content: center;
     color: var(--gold);
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--s-1);
   }
-  .modal-crown .rub { width: 14px; height: 14px; }
+  .modal-crown .rub { width: 16px; height: 16px; }
   .modal h2 {
-    margin: 0;
-    font-family: var(--display);
-    font-weight: 600;
-    font-size: 22px; line-height: 28px;
-    letter-spacing: -0.01em;
-    text-align: center;
+    margin: 0; font-size: 22px; font-weight: 700;
+    letter-spacing: -0.01em; text-align: center;
   }
-  .modal p { color: var(--muted); margin: 0; font-size: 13px; line-height: 20px; text-align: center; }
-  .modal-actions { display: flex; gap: var(--space-sm); margin-top: 6px; }
+  .modal p { color: var(--muted); margin: 0; font-size: 13px; text-align: center; }
+  .modal-actions { display: flex; gap: var(--s-2); margin-top: var(--s-1); }
   .modal-actions .btn { flex: 1; }
 
-  .wrong-shake { animation: shake 0.3s ease; border-color: var(--danger) !important; }
+  .wrong-shake { animation: shake 0.35s ease; border-color: var(--danger) !important; }
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
   }
 
-  [hidden] { display: none !important; }
+  /* ------------- RESPONSIVE ------------- */
+  @media (max-width: 640px) {
+    .app { grid-template-columns: 60px 1fr; }
+    .sidebar { padding: var(--s-4) var(--s-2); gap: var(--s-4); }
+    .sidebar-logo { width: 40px; height: 40px; }
+    .nav-btn { width: 40px; height: 40px; }
+    .nav-btn::before { left: -8px; }
+    .nav-tooltip { display: none; }
+    .main { padding: var(--s-4) var(--s-3) var(--s-7); gap: var(--s-4); }
+    .top-bar h1 { font-size: 30px; }
+    .top-bar h1 .accent-blob { width: 32px; height: 32px; }
+    .top-bar h1 .accent-blob .rub { width: 14px; height: 14px; }
+    .top-bar h1 .dark-blob { padding: 2px 12px 2px 8px; font-size: 22px; }
+    .top-bar h1 .dark-blob .icon { width: 16px; height: 16px; }
+    .next-name { font-size: 42px; }
+    .next-arabic { font-size: 44px; }
+    .hero-card { grid-template-columns: 1fr; min-height: auto; }
+    .timer-ring-wrap { width: 170px; height: 170px; }
+    .timer-digits { font-size: 28px; }
+    .prayer-card { padding: 12px var(--s-4); gap: var(--s-3); grid-template-columns: auto 1fr auto; }
+    .prayer-card .prayer-sub { display: none; }
+    .card { padding: var(--s-5); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
-</head>
-<body>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 
+<!-- ICON SPRITE -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="rub" viewBox="-10 -10 20 20">
-      <g fill="currentColor">
-        <rect x="-6.5" y="-6.5" width="13" height="13"/>
-        <rect x="-6.5" y="-6.5" width="13" height="13" transform="rotate(45)"/>
-      </g>
-    </symbol>
+    <!-- Rub-el-Hizb (ornament) -->
+    <symbol id="rub" viewBox="-10 -10 20 20"><g fill="currentColor">
+      <rect x="-6.5" y="-6.5" width="13" height="13"/>
+      <rect x="-6.5" y="-6.5" width="13" height="13" transform="rotate(45)"/>
+    </g></symbol>
+    <!-- Lucide-style outline icons -->
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.7.6 2.5a2 2 0 0 1-.5 2.1L7.9 9.6a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.8.3 1.6.5 2.5.6a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M12 22s8-7 8-13a8 8 0 1 0-16 0c0 6 8 13 8 13z"/><circle cx="12" cy="9" r="3"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
   </defs>
 </svg>
 
 <div class="app">
-  <header class="hero">
-    <div class="hero-crown">
-      <span class="crown-line"></span>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo" title="Office Jamaat">
       <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
-      <span class="crown-line"></span>
     </div>
-    <div class="eyebrow"><span id="hero-location">Setting up</span> · <span id="today-date">—</span></div>
-    <div class="hijri" id="hijri-date">—</div>
-    <div class="next-label">Next jamaat</div>
-    <div class="next-name" id="next-name">—</div>
-    <div class="next-arabic" id="next-arabic" dir="rtl">—</div>
-    <div class="next-time" id="next-time">—</div>
-    <div class="next-start" id="next-start"></div>
-    <div class="countdown" id="countdown">starting…</div>
-  </header>
-
-  <div id="banner" class="banner" hidden>
-    <div class="banner-body">
-      <div class="banner-title">
-        <span id="banner-title">Prayer call</span>
-        <span class="banner-arabic" id="banner-arabic" dir="rtl"></span>
-      </div>
-      <div class="banner-msg" id="banner-msg"></div>
-    </div>
-    <button class="banner-close" id="banner-close">Dismiss</button>
-  </div>
-
-  <section>
-    <div class="section-title">
-      <span class="section-ornament">
-        <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
-        <span>Jamaat schedule</span>
-      </span>
-      <button id="notification-status" class="status-pill status-warn" type="button">
-        notifications off
+    <nav class="sidebar-nav" aria-label="Primary">
+      <button class="nav-btn active" data-view="home" aria-label="Home">
+        <svg class="icon"><use href="#i-home"/></svg>
+        <span class="nav-tooltip">Home</span>
       </button>
+      <button class="nav-btn" data-view="schedule" aria-label="Schedule">
+        <svg class="icon"><use href="#i-calendar"/></svg>
+        <span class="nav-tooltip">Schedule</span>
+      </button>
+      <button class="nav-btn" id="notification-status" data-badge="" aria-label="Notifications">
+        <svg class="icon"><use href="#i-bell"/></svg>
+        <span class="nav-tooltip" id="notif-tip">Notifications off</span>
+      </button>
+      <button class="nav-btn" id="admin-btn" data-view="admin" aria-label="Settings">
+        <svg class="icon"><use href="#i-settings"/></svg>
+        <span class="nav-tooltip">Settings</span>
+      </button>
+    </nav>
+    <div class="sidebar-foot" title="You" aria-label="Profile">
+      <svg class="icon"><use href="#i-user"/></svg>
     </div>
-    <div class="prayer-list" id="prayer-list"></div>
-  </section>
+  </aside>
 
-  <div class="admin-toggle">
-    <button class="admin-btn" id="admin-btn" type="button">
-      <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
-      <span>Admin controls</span>
-    </button>
-  </div>
-
-  <div class="admin-panel" id="admin-panel" hidden>
-    <div class="admin-section">
-      <h3>Call the office now</h3>
-      <div class="call-grid" id="call-grid"></div>
-    </div>
-
-    <div class="admin-section">
-      <h3>Jamaat times</h3>
-      <div class="jamaat-section" id="jamaat-section"></div>
-    </div>
-
-    <div class="admin-section">
-      <h3>Mute today's auto-reminder</h3>
-      <div class="mute-grid" id="mute-grid"></div>
-    </div>
-
-    <div class="admin-section">
-      <h3>Settings</h3>
-      <div class="form-row">
-        <label for="setting-city">Location preset</label>
-        <select id="setting-city"></select>
+  <!-- MAIN -->
+  <main class="main">
+    <header class="top-bar">
+      <div>
+        <div class="top-eyebrow"><span class="pulse-dot"></span><span id="hero-location">Setting up</span> · <span id="today-date">—</span></div>
+        <h1>
+          Office
+          <span class="accent-blob"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></span>
+          Jamaat
+          <span class="dark-blob"><svg class="icon"><use href="#i-sparkle"/></svg> live</span>
+        </h1>
       </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label for="setting-lat">Latitude</label>
-          <input id="setting-lat" type="number" step="0.0001">
-        </div>
-        <div class="form-row">
-          <label for="setting-lon">Longitude</label>
-          <input id="setting-lon" type="number" step="0.0001">
-        </div>
+      <div class="top-actions">
+        <button class="chip" id="hijri-chip" type="button" title="Hijri date">
+          <svg class="icon icon-sm"><use href="#i-moon"/></svg>
+          <span class="chip-arabic" id="hijri-date">—</span>
+        </button>
+        <button class="chip chip-dark" id="location-chip" type="button" title="Location">
+          <span class="icon-slot"><svg class="icon icon-sm"><use href="#i-map"/></svg></span>
+          <span id="location-label">—</span>
+        </button>
       </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label for="setting-method">Calculation method</label>
-          <select id="setting-method">
-            <option value="Karachi">Karachi (S. Asia)</option>
-            <option value="MuslimWorldLeague">Muslim World League</option>
-            <option value="Egyptian">Egyptian</option>
-            <option value="UmmAlQura">Umm al-Qura (Makkah)</option>
-            <option value="Dubai">Dubai</option>
-            <option value="MoonsightingCommittee">Moonsighting Committee</option>
-            <option value="NorthAmerica">ISNA (N. America)</option>
-            <option value="Kuwait">Kuwait</option>
-            <option value="Qatar">Qatar</option>
-            <option value="Singapore">Singapore</option>
-            <option value="Turkey">Turkey</option>
-            <option value="Tehran">Tehran</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label for="setting-lead">Reminder lead (min)</label>
-          <input id="setting-lead" type="number" min="0" max="60" value="5">
-        </div>
-      </div>
-      <div class="form-row">
-        <label for="setting-passcode">Admin passcode (optional)</label>
-        <input id="setting-passcode" type="text" placeholder="leave blank for no passcode" autocomplete="off">
-      </div>
-      <button class="btn btn-full" id="save-settings" type="button">Save settings</button>
-      <div class="save-status" id="save-status"></div>
-    </div>
+    </header>
 
-    <button class="btn btn-secondary btn-full" id="exit-admin" type="button">Exit admin</button>
-  </div>
+    <nav class="pill-tabs" id="pill-tabs" role="tablist">
+      <button class="pill-tab active" data-tab="today" role="tab">Today</button>
+      <button class="pill-tab" data-tab="week" role="tab">This week</button>
+      <button class="pill-tab" data-tab="qibla" role="tab">Qibla</button>
+      <button class="pill-tab" data-tab="members" role="tab">Members</button>
+      <button class="pill-tab" data-tab="history" role="tab">History</button>
+    </nav>
 
-  <div class="footer">
-    <div class="footer-ornament">
-      <span class="line"></span>
-      <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
-      <span class="line"></span>
+    <!-- HOME VIEW -->
+    <section class="view-home" id="view-home">
+      <div id="banner" class="banner" hidden>
+        <div class="banner-icon"><svg class="icon"><use href="#i-bell"/></svg></div>
+        <div class="banner-body">
+          <div class="banner-title">
+            <span id="banner-title">Prayer call</span>
+            <span class="banner-arabic" id="banner-arabic" dir="rtl"></span>
+          </div>
+          <div class="banner-msg" id="banner-msg"></div>
+        </div>
+        <button class="banner-close" id="banner-close">Dismiss</button>
+      </div>
+
+      <div class="bento">
+        <article class="card hero-card">
+          <div class="hero-body">
+            <div class="hero-eyebrow"><span class="dash"></span>Next jamaat</div>
+            <h2 class="next-name" id="next-name">—</h2>
+            <div class="next-arabic" id="next-arabic" dir="rtl">—</div>
+            <div class="hero-meta">
+              <div class="hero-meta-item">
+                <span class="hero-meta-label">Jamaat</span>
+                <span class="hero-meta-val accent" id="next-time">—</span>
+              </div>
+              <div class="hero-meta-item">
+                <span class="hero-meta-label">Prayer starts</span>
+                <span class="hero-meta-val" id="next-start">—</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-crown-mini">
+            <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
+          </div>
+        </article>
+
+        <article class="card timer-card">
+          <div class="timer-head">
+            <span class="timer-head-label">Countdown</span>
+            <span class="timer-head-icon"><svg class="icon icon-sm"><use href="#i-clock"/></svg></span>
+          </div>
+          <div class="timer-ring-wrap">
+            <svg class="timer-ring" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="var(--accent)"/>
+                  <stop offset="100%" stop-color="var(--black)"/>
+                </linearGradient>
+              </defs>
+              <circle class="track" cx="100" cy="100" r="85"/>
+              <circle class="progress" id="timer-progress" cx="100" cy="100" r="85"/>
+            </svg>
+            <div class="timer-center">
+              <div class="timer-digits" id="timer-digits">—</div>
+              <div class="timer-sub" id="timer-sub">until jamaat</div>
+            </div>
+          </div>
+          <div class="timer-foot" id="countdown">starting…</div>
+        </article>
+      </div>
+
+      <section>
+        <div class="schedule-head">
+          <span class="schedule-title">
+            <span class="ornament"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></span>
+            Jamaat schedule
+          </span>
+          <span class="schedule-note">five daily prayers · hanafi</span>
+        </div>
+        <div class="prayer-stack" id="prayer-list"></div>
+      </section>
+    </section>
+
+    <!-- ADMIN VIEW -->
+    <section class="view-admin" id="view-admin" hidden>
+      <div class="admin-panel">
+        <article class="card admin-section">
+          <h3><svg class="icon"><use href="#i-phone"/></svg> Call the office now</h3>
+          <div class="call-grid" id="call-grid"></div>
+        </article>
+
+        <article class="card admin-section">
+          <h3><svg class="icon"><use href="#i-clock"/></svg> Jamaat times</h3>
+          <div class="jamaat-section" id="jamaat-section"></div>
+        </article>
+
+        <article class="card admin-section">
+          <h3><svg class="icon"><use href="#i-mute"/></svg> Mute today's auto-reminder</h3>
+          <div class="mute-grid" id="mute-grid"></div>
+        </article>
+
+        <article class="card admin-section">
+          <h3><svg class="icon"><use href="#i-sliders"/></svg> Settings</h3>
+          <div class="form-row">
+            <label for="setting-city">Location preset</label>
+            <select id="setting-city"></select>
+          </div>
+          <div class="form-grid">
+            <div class="form-row"><label for="setting-lat">Latitude</label><input id="setting-lat" type="number" step="0.0001"></div>
+            <div class="form-row"><label for="setting-lon">Longitude</label><input id="setting-lon" type="number" step="0.0001"></div>
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="setting-method">Calculation method</label>
+              <select id="setting-method">
+                <option value="Karachi">Karachi (S. Asia)</option>
+                <option value="MuslimWorldLeague">Muslim World League</option>
+                <option value="Egyptian">Egyptian</option>
+                <option value="UmmAlQura">Umm al-Qura (Makkah)</option>
+                <option value="Dubai">Dubai</option>
+                <option value="MoonsightingCommittee">Moonsighting Committee</option>
+                <option value="NorthAmerica">ISNA (N. America)</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Tehran">Tehran</option>
+              </select>
+            </div>
+            <div class="form-row"><label for="setting-lead">Reminder lead (min)</label><input id="setting-lead" type="number" min="0" max="60" value="5"></div>
+          </div>
+          <div class="form-row">
+            <label for="setting-passcode">Admin passcode (optional)</label>
+            <input id="setting-passcode" type="text" placeholder="leave blank for no passcode" autocomplete="off">
+          </div>
+          <button class="btn btn-full" id="save-settings" type="button">
+            <svg class="icon icon-sm"><use href="#i-save"/></svg> Save settings
+          </button>
+          <div class="save-status" id="save-status"></div>
+        </article>
+
+        <button class="btn btn-secondary btn-full" id="exit-admin" type="button">
+          <svg class="icon icon-sm"><use href="#i-x"/></svg> Close settings
+        </button>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div class="footer-ornament">
+        <span class="line"></span>
+        <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
+        <span class="line"></span>
+      </div>
+      <div><span id="footer-method">—</span> · Hanafi school · <span id="footer-sync">local only</span></div>
+      <div>Open in Chrome, allow notifications, then <strong>Install page as app</strong> for a desktop shortcut.</div>
     </div>
-    <div><span id="footer-method">—</span> · Hanafi school · <span id="footer-sync">connecting…</span></div>
-    <div>Open in Chrome, allow notifications, then <strong>Install page as app</strong> for a desktop shortcut.</div>
-  </div>
+  </main>
 </div>
 
 <div class="modal-backdrop" id="passcode-modal" hidden>
   <div class="modal">
     <div class="modal-crown"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></div>
     <h2>Admin passcode</h2>
-    <p>Enter the passcode to open admin controls.</p>
+    <p>Enter the passcode to open settings.</p>
     <div class="form-row">
       <input id="passcode-input" type="password" autocomplete="off">
     </div>
@@ -985,7 +1433,7 @@
   'use strict';
 
   // ================================================================
-  //  SUPABASE CREDENTIALS — paste yours from Project Settings → API
+  //  SUPABASE CREDENTIALS
   // ================================================================
   const SUPABASE_URL = 'https://bltwiearpbkjbjpvmmur.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdHdpZWFycGJramJqcHZtbXVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NjUyMjAsImV4cCI6MjEwODI0MTIyMH0.Y8afcIGUcGhZxWQwWTZkFKGnrYjPw7rsmdfWA1PwZLE';
@@ -994,11 +1442,7 @@
   const PRAYERS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
   const PRAYER_LABELS = { fajr: 'Fajr', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' };
   const PRAYER_ARABIC = {
-    fajr: 'الفجر',
-    dhuhr: 'الظهر',
-    asr: 'العصر',
-    maghrib: 'المغرب',
-    isha: 'العشاء',
+    fajr: 'الفجر', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء',
   };
   const JAMAAT_DEFAULT = {
     fajr:    { mode: 'offset', offset: 20, fixed: '05:45' },
@@ -1007,13 +1451,6 @@
     maghrib: { mode: 'offset', offset: 5,  fixed: '18:30' },
     isha:    { mode: 'offset', offset: 20, fixed: '20:00' },
   };
-  // Aladhan API calculation method ids — see https://aladhan.com/calculation-methods
-  const ALADHAN_METHOD = {
-    Karachi: 1, NorthAmerica: 2, MuslimWorldLeague: 3, UmmAlQura: 4,
-    Egyptian: 5, Tehran: 7, Kuwait: 9, Qatar: 10, Singapore: 11,
-    Turkey: 13, MoonsightingCommittee: 15, Dubai: 16,
-  };
-  const timesCache = {};
   const PRESETS = {
     'Custom': null,
     'Karachi, PK': [24.8607, 67.0011, 'Karachi'],
@@ -1040,65 +1477,64 @@
     'Toronto, CA': [43.6532, -79.3832, 'NorthAmerica'],
   };
   const DEFAULT_CONFIG = {
-    lat: 24.8607,
-    lon: 67.0011,
-    locationName: 'Karachi',
-    method: 'Karachi',
-    leadMinutes: 5,
-    adminPasscode: '',
-    mutedToday: {},
-    mutedDate: '',
+    lat: 24.8607, lon: 67.0011,
+    locationName: 'Karachi', method: 'Karachi',
+    leadMinutes: 5, adminPasscode: '',
+    mutedToday: {}, mutedDate: '',
     jamaat: JAMAAT_DEFAULT,
   };
+  // Aladhan API calculation method ids (https://aladhan.com/calculation-methods)
+  const ALADHAN_METHOD = {
+    Karachi: 1, NorthAmerica: 2, MuslimWorldLeague: 3, UmmAlQura: 4,
+    Egyptian: 5, Tehran: 7, Kuwait: 9, Qatar: 10, Singapore: 11,
+    Turkey: 13, MoonsightingCommittee: 15, Dubai: 16,
+  };
+  const timesCache = {};
+
+  // Ring geometry — must match svg r=85
+  const RING_R = 85;
+  const RING_C = 2 * Math.PI * RING_R;
 
   let config = Object.assign({}, DEFAULT_CONFIG);
   let sb = null;
   let timers = [];
   const seenTriggers = new Set();
-  let audioCtx = null;
-  let isAdmin = false;
-  let currentTimes = null;
-  let currentJamaats = null;
-  let tomorrowTimes = null;
-  let tomorrowJamaats = null;
+  let audioCtx = null, isAdmin = false;
+  let currentTimes = null, currentJamaats = null;
+  let tomorrowTimes = null, tomorrowJamaats = null;
+  let prevRenderedPrayer = null;
 
-  function $(id) { return document.getElementById(id); }
+  const $ = id => document.getElementById(id);
 
   function todayKey() {
     const d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
   function fmtTime(d) {
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase().replace(/\s/g, '');
+    return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true }).toLowerCase().replace(/\s/g,'');
   }
   function fmtDate(d) {
-    return d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+    return d.toLocaleDateString([], { weekday:'long', month:'long', day:'numeric' });
   }
   function fmtHijri(d) {
-    try {
-      return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
-        day: 'numeric', month: 'long', year: 'numeric'
-      }).format(d);
-    } catch (e) {
-      try {
-        return new Intl.DateTimeFormat('en-u-ca-islamic', {
-          day: 'numeric', month: 'long', year: 'numeric'
-        }).format(d);
-      } catch (_) { return ''; }
-    }
+    try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day:'numeric', month:'long', year:'numeric' }).format(d); }
+    catch (e) { try { return new Intl.DateTimeFormat('en-u-ca-islamic', { day:'numeric', month:'long', year:'numeric' }).format(d); } catch (_) { return ''; } }
   }
   function fmtDuration(ms) {
     if (ms <= 0) return 'now';
-    const totalSec = Math.ceil(ms / 1000);
-    const h = Math.floor(totalSec / 3600);
-    const m = Math.floor((totalSec % 3600) / 60);
-    const s = totalSec % 60;
-    if (h > 0) return 'in ' + h + 'h ' + m + 'm';
-    if (m > 0) return 'in ' + m + 'm ' + String(s).padStart(2, '0') + 's';
-    return 'in ' + s + 's';
+    const s = Math.ceil(ms/1000), h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+    if (h>0) return 'in '+h+'h '+m+'m';
+    if (m>0) return 'in '+m+'m '+String(sec).padStart(2,'0')+'s';
+    return 'in '+sec+'s';
+  }
+  function fmtDigits(ms) {
+    if (ms <= 0) return '0:00';
+    const s = Math.max(0, Math.ceil(ms/1000)), h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+    if (h>0) return h+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+    return m+':'+String(sec).padStart(2,'0');
   }
   function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
   async function fetchTimes(date) {
@@ -1107,7 +1543,7 @@
     const y = date.getFullYear();
     const dateStr = dd + '-' + mo + '-' + y;
     const m = ALADHAN_METHOD[config.method] || 1;
-    const cacheKey = y + '-' + mo + '-' + dd + '_' + config.lat.toFixed(3) + '_' + config.lon.toFixed(3) + '_' + m;
+    const cacheKey = y+'-'+mo+'-'+dd+'_'+config.lat.toFixed(3)+'_'+config.lon.toFixed(3)+'_'+m;
     if (timesCache[cacheKey]) return timesCache[cacheKey];
     const url = 'https://api.aladhan.com/v1/timings/' + dateStr +
                 '?latitude=' + config.lat + '&longitude=' + config.lon +
@@ -1119,55 +1555,55 @@
     const t = json.data.timings;
     function parseHM(hhmm) {
       const parts = String(hhmm).split(':');
-      const h = parseInt(parts[0], 10);
-      const mn = parseInt(parts[1], 10);
       const dt = new Date(date);
-      dt.setHours(h, mn, 0, 0);
+      dt.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
       return dt;
     }
     const times = {
-      fajr: parseHM(t.Fajr),
-      dhuhr: parseHM(t.Dhuhr),
-      asr: parseHM(t.Asr),
-      maghrib: parseHM(t.Maghrib),
-      isha: parseHM(t.Isha),
+      fajr: parseHM(t.Fajr), dhuhr: parseHM(t.Dhuhr), asr: parseHM(t.Asr),
+      maghrib: parseHM(t.Maghrib), isha: parseHM(t.Isha),
     };
     timesCache[cacheKey] = times;
     return times;
   }
-
   function computeJamaat(prayer, startTime) {
     const src = (config.jamaat && config.jamaat[prayer]) || JAMAAT_DEFAULT[prayer];
     if (src && src.mode === 'fixed' && src.fixed) {
-      const parts = String(src.fixed).split(':');
-      const h = parseInt(parts[0], 10);
-      const m = parseInt(parts[1], 10);
+      const [h, m] = String(src.fixed).split(':').map(x => parseInt(x,10));
       if (isFinite(h) && isFinite(m)) {
-        const j = new Date(startTime);
-        j.setHours(h, m, 0, 0);
+        const j = new Date(startTime); j.setHours(h,m,0,0);
         if (j >= startTime) return j;
         return startTime;
       }
     }
-    const offset = (src && typeof src.offset === 'number' && src.offset >= 0) ? src.offset : 20;
-    return new Date(startTime.getTime() + offset * 60000);
+    const off = (src && typeof src.offset === 'number' && src.offset >= 0) ? src.offset : 20;
+    return new Date(startTime.getTime() + off*60000);
   }
-
   function computeJamaats(times) {
-    const out = {};
-    PRAYERS.forEach(p => { out[p] = computeJamaat(p, times[p]); });
-    return out;
+    const out = {}; PRAYERS.forEach(p => out[p] = computeJamaat(p, times[p])); return out;
   }
-
   function getNextPrayer(jamaats, starts) {
     const now = new Date();
-    for (const p of PRAYERS) {
-      if (jamaats[p] > now) return { prayer: p, time: jamaats[p], start: starts[p], tomorrow: false };
-    }
+    for (const p of PRAYERS) if (jamaats[p] > now) return { prayer:p, time:jamaats[p], start:starts[p], tomorrow:false };
     if (tomorrowJamaats && tomorrowTimes) {
-      return { prayer: 'fajr', time: tomorrowJamaats.fajr, start: tomorrowTimes.fajr, tomorrow: true };
+      return { prayer:'fajr', time:tomorrowJamaats.fajr, start:tomorrowTimes.fajr, tomorrow:true };
     }
-    return { prayer: 'fajr', time: null, start: null, tomorrow: true };
+    return { prayer:'fajr', time:null, start:null, tomorrow:true };
+  }
+  // Find previous jamaat for ring progress
+  function getPreviousJamaatTime(jamaats, nextTime) {
+    const now = new Date();
+    let prev = null;
+    for (const p of PRAYERS) {
+      const t = jamaats[p];
+      if (t < nextTime && t <= now && (!prev || t > prev)) prev = t;
+    }
+    if (!prev) {
+      // Fallback: use midnight of today
+      const mid = new Date(); mid.setHours(0,0,0,0);
+      return mid;
+    }
+    return prev;
   }
 
   function renderHero() {
@@ -1176,58 +1612,83 @@
     $('hero-location').textContent = config.locationName;
     $('today-date').textContent = fmtDate(new Date());
     $('hijri-date').textContent = fmtHijri(new Date());
-    $('next-name').textContent = PRAYER_LABELS[next.prayer] + (next.tomorrow ? ' · tomorrow' : '');
+    $('location-label').textContent = config.locationName;
+    const name = PRAYER_LABELS[next.prayer] + (next.tomorrow ? ' · tomorrow' : '');
+    if ($('next-name').textContent !== name) {
+      $('next-name').textContent = name;
+      $('next-name').style.animation = 'none'; void $('next-name').offsetWidth;
+      $('next-name').style.animation = '';
+    }
     $('next-arabic').textContent = PRAYER_ARABIC[next.prayer] || '';
     if (!next.time) {
       $('next-time').textContent = '—';
-      $('next-start').textContent = '';
+      $('next-start').textContent = '—';
       $('countdown').textContent = '';
       return;
     }
     $('next-time').textContent = fmtTime(next.time);
-    const startEl = $('next-start');
-    if (startEl) {
-      const sameTime = Math.abs(next.time - next.start) < 60000;
-      startEl.textContent = sameTime ? '' : 'prayer starts ' + fmtTime(next.start);
-    }
+    const sameTime = Math.abs(next.time - next.start) < 60000;
+    $('next-start').textContent = sameTime ? '—' : fmtTime(next.start);
+
     const ms = next.time - new Date();
     const countEl = $('countdown');
     countEl.textContent = fmtDuration(ms);
-    countEl.classList.toggle('imminent', ms < 10 * 60 * 1000 && ms > 0);
+    countEl.classList.toggle('imminent', ms < 10*60*1000 && ms > 0);
+
+    // timer ring
+    const digitsEl = $('timer-digits');
+    const subEl = $('timer-sub');
+    const progEl = $('timer-progress');
+    const prev = getPreviousJamaatTime(currentJamaats, next.time);
+    const total = next.time - prev;
+    const elapsed = Date.now() - prev;
+    const frac = Math.max(0, Math.min(1, elapsed/total));
+    const offset = RING_C * (1 - frac);
+    if (progEl) progEl.style.strokeDashoffset = offset;
+    if (digitsEl) digitsEl.textContent = fmtDigits(ms);
+    if (subEl) subEl.textContent = 'until ' + PRAYER_LABELS[next.prayer] + ' jamaat';
   }
 
   function renderPrayerList() {
     if (!currentTimes || !currentJamaats) return;
     const next = getNextPrayer(currentJamaats, currentTimes);
-    const now = new Date();
-    const todayK = todayKey();
-    const html = PRAYERS.map(p => {
-      const start = currentTimes[p];
-      const jamaat = currentJamaats[p];
-      const isNext = p === next.prayer && !next.tomorrow;
-      const passed = jamaat < now;
-      const muted = !!(config.mutedToday[p] && config.mutedDate === todayK);
-      const classes = ['prayer-row'];
-      if (isNext) classes.push('active');
-      if (passed) classes.push('passed');
-      const sub = isNext ? 'next' : passed ? 'done' : '';
-      const muteBadge = muted ? '<span class="mute-badge">muted</span>' : '';
-      const sameTime = Math.abs(jamaat - start) < 60000;
-      const startLine = sameTime ? '' : '<span class="prayer-start">starts ' + fmtTime(start) + '</span>';
-      return '<div class="' + classes.join(' ') + '">' +
-        '<span class="prayer-indicator"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></span>' +
-        '<div class="prayer-labels">' +
-          '<span class="prayer-name">' + PRAYER_LABELS[p] + muteBadge + '</span>' +
-          '<span class="prayer-arabic" dir="rtl">' + (PRAYER_ARABIC[p] || '') + '</span>' +
-        '</div>' +
-        '<span class="prayer-sub">' + sub + '</span>' +
-        '<div class="prayer-times">' +
-          '<span class="prayer-time">' + fmtTime(jamaat) + '</span>' +
-          startLine +
-        '</div>' +
-        '</div>';
-    }).join('');
-    $('prayer-list').innerHTML = html;
+    const now = new Date(), todayK = todayKey();
+    // Only full re-render when the "next" prayer changes to avoid resetting entry animations
+    const nextKey = next.prayer + (next.tomorrow ? ':t' : '');
+    const container = $('prayer-list');
+    if (!container.children.length || prevRenderedPrayer !== nextKey) {
+      prevRenderedPrayer = nextKey;
+      container.innerHTML = PRAYERS.map(p => {
+        const start = currentTimes[p], jamaat = currentJamaats[p];
+        const isNext = p === next.prayer && !next.tomorrow;
+        const passed = jamaat < now;
+        const muted = !!(config.mutedToday[p] && config.mutedDate === todayK);
+        const classes = ['prayer-card']; if (isNext) classes.push('active'); if (passed) classes.push('passed');
+        const sub = isNext ? 'next' : passed ? 'done' : 'upcoming';
+        const muteBadge = muted ? '<span class="mute-badge">muted</span>' : '';
+        const sameTime = Math.abs(jamaat - start) < 60000;
+        const startLine = sameTime ? '' : '<span class="prayer-start">starts ' + fmtTime(start) + '</span>';
+        return '<div class="' + classes.join(' ') + '" data-prayer="' + p + '">' +
+          '<span class="prayer-indicator"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></span>' +
+          '<div class="prayer-labels">' +
+            '<span class="prayer-name">' + PRAYER_LABELS[p] + muteBadge + '</span>' +
+            '<span class="prayer-arabic" dir="rtl">' + (PRAYER_ARABIC[p] || '') + '</span>' +
+          '</div>' +
+          '<span class="prayer-sub">' + sub + '</span>' +
+          '<div class="prayer-times">' +
+            '<span class="prayer-time">' + fmtTime(jamaat) + '</span>' + startLine +
+          '</div>' +
+          '</div>';
+      }).join('');
+    } else {
+      // Light touch-up: just update passed states each tick
+      PRAYERS.forEach(p => {
+        const card = container.querySelector('.prayer-card[data-prayer="' + p + '"]');
+        if (!card) return;
+        const passed = currentJamaats[p] < now;
+        card.classList.toggle('passed', passed && !card.classList.contains('active'));
+      });
+    }
   }
 
   function renderFooter() {
@@ -1249,31 +1710,21 @@
     grid.querySelectorAll('.call-btn').forEach(btn => {
       btn.addEventListener('click', () => sendTrigger(btn.dataset.prayer));
     });
-
     renderJamaatControls();
-
     const todayK = todayKey();
     const mute = $('mute-grid');
     mute.innerHTML = PRAYERS.map(p => {
       const on = !!(config.mutedToday[p] && config.mutedDate === todayK);
       return '<button class="mute-btn ' + (on ? 'on' : '') + '" type="button" data-prayer="' + p + '">' +
-        '<span class="mute-check"></span>' +
-        '<span>' + PRAYER_LABELS[p] + '</span>' +
-        '</button>';
+        '<span class="mute-check"></span><span>' + PRAYER_LABELS[p] + '</span></button>';
     }).join('');
-    mute.querySelectorAll('.mute-btn').forEach(btn => {
-      btn.addEventListener('click', () => toggleMute(btn.dataset.prayer));
-    });
+    mute.querySelectorAll('.mute-btn').forEach(btn => btn.addEventListener('click', () => toggleMute(btn.dataset.prayer)));
 
     const presetSel = $('setting-city');
-    presetSel.innerHTML = Object.keys(PRESETS).map(k =>
-      '<option value="' + escapeHtml(k) + '">' + escapeHtml(k) + '</option>'
-    ).join('');
+    presetSel.innerHTML = Object.keys(PRESETS).map(k => '<option value="' + escapeHtml(k) + '">' + escapeHtml(k) + '</option>').join('');
     let matched = 'Custom';
     for (const [name, data] of Object.entries(PRESETS)) {
-      if (data && Math.abs(data[0] - config.lat) < 0.01 && Math.abs(data[1] - config.lon) < 0.01 && data[2] === config.method) {
-        matched = name; break;
-      }
+      if (data && Math.abs(data[0]-config.lat)<0.01 && Math.abs(data[1]-config.lon)<0.01 && data[2]===config.method) { matched = name; break; }
     }
     presetSel.value = matched;
     $('setting-lat').value = config.lat;
@@ -1281,8 +1732,7 @@
     $('setting-method').value = config.method;
     $('setting-lead').value = config.leadMinutes;
     $('setting-passcode').value = config.adminPasscode;
-    $('save-status').textContent = '';
-    $('save-status').classList.remove('ok', 'err');
+    $('save-status').textContent = ''; $('save-status').classList.remove('ok','err');
   }
 
   async function refreshTimes() {
@@ -1290,16 +1740,15 @@
       $('footer-sync').textContent = 'fetching prayer times…';
       currentTimes = await fetchTimes(new Date());
       currentJamaats = computeJamaats(currentTimes);
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
       tomorrowTimes = await fetchTimes(tomorrow);
       tomorrowJamaats = computeJamaats(tomorrowTimes);
       return true;
     } catch (e) {
       console.error('Could not fetch prayer times:', e);
-      $('next-name').textContent = 'Could not fetch prayer times';
-      $('next-time').textContent = '';
+      $('next-name').textContent = 'Could not fetch';
       $('next-arabic').textContent = '';
+      $('next-time').textContent = '—';
       $('next-start').textContent = String(e.message || e);
       $('countdown').textContent = 'retry in 30s';
       $('footer-sync').textContent = 'offline — ' + (e.message || 'unknown error');
@@ -1307,73 +1756,62 @@
       return false;
     }
   }
+  function recomputeJamaats() {
+    if (currentTimes) currentJamaats = computeJamaats(currentTimes);
+    if (tomorrowTimes) tomorrowJamaats = computeJamaats(tomorrowTimes);
+  }
 
   function renderAll() {
     if (!currentTimes || !currentJamaats) {
       refreshTimes().then(ok => { if (ok) renderAll(); });
       return;
     }
-    renderHero();
-    renderPrayerList();
-    renderFooter();
-    scheduleAutoReminders();
+    renderHero(); renderPrayerList(); renderFooter(); scheduleAutoReminders();
     if (isAdmin) renderAdminControls();
   }
 
-  function recomputeJamaats() {
-    if (currentTimes) currentJamaats = computeJamaats(currentTimes);
-    if (tomorrowTimes) tomorrowJamaats = computeJamaats(tomorrowTimes);
-  }
-
   function renderJamaatControls() {
-    const section = $('jamaat-section');
-    if (!section) return;
+    const section = $('jamaat-section'); if (!section) return;
     const current = config.jamaat || JAMAAT_DEFAULT;
     section.innerHTML = PRAYERS.map(p => {
       const j = Object.assign({}, JAMAAT_DEFAULT[p], current[p] || {});
       const isOffset = j.mode !== 'fixed';
-      return (
-        '<div class="jamaat-row" data-prayer="' + p + '">' +
-          '<div class="jamaat-head">' +
-            '<span class="jamaat-eng">' + PRAYER_LABELS[p] + '</span>' +
-            '<span class="jamaat-ar" dir="rtl">' + PRAYER_ARABIC[p] + '</span>' +
+      return '<div class="jamaat-row" data-prayer="' + p + '">' +
+        '<div class="jamaat-head">' +
+          '<span class="jamaat-eng">' + PRAYER_LABELS[p] + '</span>' +
+          '<span class="jamaat-ar" dir="rtl">' + PRAYER_ARABIC[p] + '</span>' +
+        '</div>' +
+        '<div class="jamaat-controls">' +
+          '<div class="segmented">' +
+            '<button type="button" class="seg-btn ' + (isOffset?'active':'') + '" data-mode="offset">+ min</button>' +
+            '<button type="button" class="seg-btn ' + (isOffset?'':'active') + '" data-mode="fixed">at</button>' +
           '</div>' +
-          '<div class="jamaat-controls">' +
-            '<div class="segmented">' +
-              '<button type="button" class="seg-btn ' + (isOffset ? 'active' : '') + '" data-mode="offset">+ min</button>' +
-              '<button type="button" class="seg-btn ' + (isOffset ? '' : 'active') + '" data-mode="fixed">at</button>' +
-            '</div>' +
-            '<input type="number" class="jamaat-input offset-input" min="0" max="120" value="' + j.offset + '"' + (isOffset ? '' : ' hidden') + '>' +
-            '<input type="time" class="jamaat-input fixed-input" value="' + j.fixed + '"' + (isOffset ? ' hidden' : '') + '>' +
-          '</div>' +
-        '</div>'
-      );
+          '<input type="number" class="jamaat-input offset-input" min="0" max="120" value="' + j.offset + '"' + (isOffset?'':' hidden') + '>' +
+          '<input type="time" class="jamaat-input fixed-input" value="' + j.fixed + '"' + (isOffset?' hidden':'') + '>' +
+        '</div>' +
+      '</div>';
     }).join('');
     section.querySelectorAll('.jamaat-row').forEach(row => {
       const segBtns = row.querySelectorAll('.seg-btn');
       const offsetInput = row.querySelector('.offset-input');
       const fixedInput = row.querySelector('.fixed-input');
-      segBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const mode = btn.dataset.mode;
-          segBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
-          offsetInput.hidden = (mode !== 'offset');
-          fixedInput.hidden = (mode !== 'fixed');
-        });
-      });
+      segBtns.forEach(btn => btn.addEventListener('click', () => {
+        const mode = btn.dataset.mode;
+        segBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+        offsetInput.hidden = (mode !== 'offset'); fixedInput.hidden = (mode !== 'fixed');
+      }));
     });
   }
 
   function collectJamaatFromForm() {
-    const section = $('jamaat-section');
-    if (!section) return config.jamaat || JAMAAT_DEFAULT;
+    const section = $('jamaat-section'); if (!section) return config.jamaat || JAMAAT_DEFAULT;
     const out = {};
     section.querySelectorAll('.jamaat-row').forEach(row => {
       const p = row.dataset.prayer;
       const active = row.querySelector('.seg-btn.active');
       const mode = active ? active.dataset.mode : 'offset';
-      const offsetRaw = parseInt(row.querySelector('.offset-input').value, 10);
-      const offset = Math.max(0, Math.min(120, isFinite(offsetRaw) ? offsetRaw : 20));
+      const offRaw = parseInt(row.querySelector('.offset-input').value, 10);
+      const offset = Math.max(0, Math.min(120, isFinite(offRaw) ? offRaw : 20));
       const fixed = row.querySelector('.fixed-input').value || JAMAAT_DEFAULT[p].fixed;
       out[p] = { mode, offset, fixed };
     });
@@ -1382,33 +1820,20 @@
 
   async function requestNotificationPerm(forceAsk) {
     const btn = $('notification-status');
-    if (!('Notification' in window)) {
-      btn.textContent = 'notifications unavailable';
-      return;
-    }
+    const tip = $('notif-tip');
+    if (!('Notification' in window)) { if (tip) tip.textContent = 'Notifications unavailable'; return; }
     if (Notification.permission === 'granted') {
-      btn.textContent = 'notifications on';
-      btn.classList.remove('status-warn');
-      btn.classList.add('status-ok');
+      if (tip) tip.textContent = 'Notifications on';
+      btn.setAttribute('data-badge', '');
+      btn.style.setProperty('--_dot-color', 'var(--success)');
       return;
     }
-    if (Notification.permission === 'denied') {
-      btn.textContent = 'notifications blocked';
-      return;
-    }
-    if (!forceAsk) {
-      btn.textContent = 'tap to enable notifications';
-      return;
-    }
+    if (Notification.permission === 'denied') { if (tip) tip.textContent = 'Notifications blocked'; return; }
+    if (!forceAsk) { if (tip) tip.textContent = 'Tap to enable notifications'; return; }
     try {
       const res = await Notification.requestPermission();
-      if (res === 'granted') {
-        btn.textContent = 'notifications on';
-        btn.classList.remove('status-warn');
-        btn.classList.add('status-ok');
-      } else {
-        btn.textContent = 'notifications off';
-      }
+      if (res === 'granted') { if (tip) tip.textContent = 'Notifications on'; }
+      else { if (tip) tip.textContent = 'Notifications off'; }
     } catch (e) { console.error(e); }
   }
 
@@ -1417,20 +1842,17 @@
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const now = audioCtx.currentTime;
-      [587.33, 783.99, 987.77].forEach((freq, i) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.frequency.value = freq;
-        osc.type = 'sine';
-        const start = now + i * 0.22;
+      [587.33, 783.99, 987.77].forEach((f, i) => {
+        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc.frequency.value = f; osc.type = 'sine';
+        const start = now + i*0.22;
         gain.gain.setValueAtTime(0, start);
         gain.gain.linearRampToValueAtTime(0.16, start + 0.03);
         gain.gain.exponentialRampToValueAtTime(0.001, start + 0.9);
         osc.connect(gain).connect(audioCtx.destination);
-        osc.start(start);
-        osc.stop(start + 0.95);
+        osc.start(start); osc.stop(start + 0.95);
       });
-    } catch (e) { /* silent */ }
+    } catch (e) {}
   }
 
   let bannerHideTimer = null;
@@ -1440,7 +1862,7 @@
     $('banner-msg').textContent = msg;
     $('banner').hidden = false;
     if (bannerHideTimer) clearTimeout(bannerHideTimer);
-    bannerHideTimer = setTimeout(() => { $('banner').hidden = true; }, 10 * 60 * 1000);
+    bannerHideTimer = setTimeout(() => { $('banner').hidden = true; }, 10*60*1000);
   }
 
   function notifyPrayer(prayer, kind) {
@@ -1448,40 +1870,25 @@
     const arabic = PRAYER_ARABIC[prayer] || '';
     const auto = kind === 'auto';
     const title = auto ? name + ' in ' + config.leadMinutes + ' minutes' : 'Call for ' + name + ' jamaat';
-    const msg = auto
-      ? 'Jamaat shortly — wrap up and head over.'
-      : 'Everyone — ' + name + ' is being called now.';
-    showBanner(title, msg, arabic);
-    playChime();
+    const msg = auto ? 'Jamaat shortly — wrap up and head over.' : 'Everyone — ' + name + ' is being called now.';
+    showBanner(title, msg, arabic); playChime();
     if ('Notification' in window && Notification.permission === 'granted') {
       try {
-        const n = new Notification(title, {
-          body: msg,
-          tag: 'jamaat-' + prayer + '-' + (auto ? 'auto' : 'manual'),
-          requireInteraction: false,
-          silent: false,
-        });
-        setTimeout(() => { try { n.close(); } catch (_) {} }, 60000);
-      } catch (e) { /* ignore */ }
+        const n = new Notification(title, { body: msg, tag: 'jamaat-' + prayer + '-' + (auto?'auto':'manual'), silent: false });
+        setTimeout(() => { try { n.close(); } catch(_){} }, 60000);
+      } catch(e){}
     }
   }
 
-  function clearTimers() {
-    timers.forEach(t => clearTimeout(t));
-    timers = [];
-  }
-
+  function clearTimers() { timers.forEach(t => clearTimeout(t)); timers = []; }
   function scheduleAutoReminders() {
-    clearTimers();
-    if (!currentJamaats) return;
-    const now = new Date();
-    const todayK = todayKey();
+    clearTimers(); if (!currentJamaats) return;
+    const now = new Date(), todayK = todayKey();
     for (const p of PRAYERS) {
       const t = currentJamaats[p];
-      const remindAt = new Date(t.getTime() - config.leadMinutes * 60000);
+      const remindAt = new Date(t.getTime() - config.leadMinutes*60000);
       if (remindAt > now) {
-        const prayer = p;
-        const delay = remindAt - now;
+        const prayer = p, delay = remindAt - now;
         if (delay > 2147483000) continue;
         timers.push(setTimeout(() => {
           if (config.mutedToday[prayer] && config.mutedDate === todayK) return;
@@ -1489,39 +1896,28 @@
         }, delay));
       }
     }
-    const midnight = new Date();
-    midnight.setHours(24, 0, 30, 0);
-    const toMid = midnight - now;
-    if (toMid > 0 && toMid < 2147483000) {
-      timers.push(setTimeout(renderAll, toMid));
-    }
+    const mid = new Date(); mid.setHours(24,0,30,0);
+    const toMid = mid - now;
+    if (toMid > 0 && toMid < 2147483000) timers.push(setTimeout(renderAll, toMid));
   }
 
-  // --- Supabase ---
   async function initDb() {
     try {
       if (!window.supabase || !window.supabase.createClient) {
-        $('footer-sync').textContent = 'local only (SDK missing)';
-        return;
+        $('footer-sync').textContent = 'local only (SDK missing)'; return;
       }
       if (!SUPABASE_URL.includes('supabase.co') || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
-        $('footer-sync').textContent = 'local only (set Supabase keys)';
-        return;
+        $('footer-sync').textContent = 'local only (set Supabase keys)'; return;
       }
       sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         realtime: { params: { eventsPerSecond: 10 } },
       });
-
       try {
-        const { data: row, error } = await sb
-          .from('config').select('data').eq('id', 'main').maybeSingle();
+        const { data: row, error } = await sb.from('config').select('data').eq('id', 'main').maybeSingle();
         if (error && error.code !== 'PGRST116') throw error;
         if (row && row.data) {
           config = Object.assign({}, DEFAULT_CONFIG, row.data);
-          if (config.mutedDate !== todayKey()) {
-            config.mutedToday = {};
-            config.mutedDate = '';
-          }
+          if (config.mutedDate !== todayKey()) { config.mutedToday = {}; config.mutedDate = ''; }
         } else {
           await sb.from('config').upsert({ id: 'main', data: config }, { onConflict: 'id' });
         }
@@ -1531,19 +1927,13 @@
         .on('postgres_changes',
           { event: '*', schema: 'public', table: 'config', filter: 'id=eq.main' },
           async payload => {
-            const d = payload.new && payload.new.data;
-            if (!d) return;
+            const d = payload.new && payload.new.data; if (!d) return;
             const prevLat = config.lat, prevLon = config.lon, prevMethod = config.method;
             config = Object.assign({}, DEFAULT_CONFIG, d);
-            if (config.mutedDate !== todayKey()) {
-              config.mutedToday = {};
-              config.mutedDate = '';
-            }
+            if (config.mutedDate !== todayKey()) { config.mutedToday = {}; config.mutedDate = ''; }
             if (prevLat !== config.lat || prevLon !== config.lon || prevMethod !== config.method) {
               await refreshTimes();
-            } else {
-              recomputeJamaats();
-            }
+            } else { recomputeJamaats(); }
             renderAll();
           })
         .subscribe();
@@ -1564,51 +1954,38 @@
       renderFooter();
       await refreshTimes();
       renderAll();
-    } catch (e) {
-      console.error('db init failed', e);
-      $('footer-sync').textContent = 'local only — ' + (e.message || e);
-    }
+    } catch (e) { console.error('db init failed', e); $('footer-sync').textContent = 'local only — ' + (e.message || e); }
   }
 
   async function sendTrigger(prayer) {
     try {
       if (sb) {
         await sb.from('triggers').insert({ prayer, created_at: Date.now() });
-      } else {
-        notifyPrayer(prayer, 'manual');
-      }
-    } catch (e) {
-      console.error('trigger failed', e);
-      notifyPrayer(prayer, 'manual');
-    }
+      } else notifyPrayer(prayer, 'manual');
+    } catch (e) { console.error('trigger failed', e); notifyPrayer(prayer, 'manual'); }
   }
 
   async function toggleMute(prayer) {
     const key = todayKey();
     const current = (config.mutedDate === key) ? Object.assign({}, config.mutedToday) : {};
     current[prayer] = !current[prayer];
-    config.mutedToday = current;
-    config.mutedDate = key;
+    config.mutedToday = current; config.mutedDate = key;
     if (sb) {
       try { await sb.from('config').upsert({ id: 'main', data: config }, { onConflict: 'id' }); } catch (_) {}
     }
-    renderAll();
-    renderAdminControls();
+    renderAll(); renderAdminControls();
   }
 
   async function saveSettings() {
-    const lat = parseFloat($('setting-lat').value);
-    const lon = parseFloat($('setting-lon').value);
+    const lat = parseFloat($('setting-lat').value), lon = parseFloat($('setting-lon').value);
     const method = $('setting-method').value;
     const lead = Math.max(0, Math.min(60, parseInt($('setting-lead').value, 10) || 5));
     const passcode = $('setting-passcode').value;
     const presetName = $('setting-city').value;
     if (!isFinite(lat) || !isFinite(lon)) {
-      $('save-status').textContent = 'Need valid latitude and longitude.';
-      $('save-status').classList.add('err');
-      return;
+      $('save-status').textContent = 'Need valid latitude and longitude.'; $('save-status').classList.add('err'); return;
     }
-    const locationName = presetName === 'Custom' ? (lat.toFixed(2) + ', ' + lon.toFixed(2)) : presetName.split(',')[0];
+    const locationName = presetName === 'Custom' ? (lat.toFixed(2)+', '+lon.toFixed(2)) : presetName.split(',')[0];
     const jamaat = collectJamaatFromForm();
     const prevLat = config.lat, prevLon = config.lon, prevMethod = config.method;
     const next = Object.assign({}, config, { lat, lon, method, leadMinutes: lead, adminPasscode: passcode, locationName, jamaat });
@@ -1617,21 +1994,36 @@
       try {
         const { error } = await sb.from('config').upsert({ id: 'main', data: next }, { onConflict: 'id' });
         if (error) throw error;
-        $('save-status').textContent = 'Saved — your group will update.';
-        $('save-status').classList.add('ok');
+        $('save-status').textContent = 'Saved — your group will update.'; $('save-status').classList.add('ok');
       } catch (e) {
-        $('save-status').textContent = 'Save failed: ' + (e.message || e);
-        $('save-status').classList.add('err');
+        $('save-status').textContent = 'Save failed: ' + (e.message || e); $('save-status').classList.add('err');
       }
     } else {
       $('save-status').textContent = 'Saved locally — Supabase not connected.';
     }
-    if (prevLat !== lat || prevLon !== lon || prevMethod !== method) {
-      await refreshTimes();
-    } else {
-      recomputeJamaats();
-    }
+    if (prevLat !== lat || prevLon !== lon || prevMethod !== method) { await refreshTimes(); }
+    else { recomputeJamaats(); }
     renderAll();
+  }
+
+  function setView(view) {
+    const home = $('view-home'), admin = $('view-admin');
+    if (view === 'admin') { home.hidden = true; admin.hidden = false; isAdmin = true; renderAdminControls(); }
+    else { home.hidden = false; admin.hidden = true; isAdmin = false; }
+    document.querySelectorAll('.sidebar-nav .nav-btn[data-view]').forEach(b => {
+      b.classList.toggle('active', b.dataset.view === view || (view === 'schedule' && b.dataset.view === 'home') ? true : b.dataset.view === view);
+    });
+    // Precise active handling
+    document.querySelectorAll('.sidebar-nav .nav-btn[data-view]').forEach(b => b.classList.remove('active'));
+    const active = document.querySelector('.sidebar-nav .nav-btn[data-view="' + view + '"]');
+    if (active) active.classList.add('active');
+    if (view === 'schedule') {
+      const el = document.querySelector('#view-home .schedule-head');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (view === 'admin') {
+      setTimeout(() => admin.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    }
   }
 
   function openAdmin() {
@@ -1639,56 +2031,48 @@
       $('passcode-modal').hidden = false;
       $('passcode-input').value = '';
       setTimeout(() => $('passcode-input').focus(), 10);
-    } else {
-      enterAdmin();
-    }
+    } else { setView('admin'); }
   }
-  function enterAdmin() {
-    isAdmin = true;
-    $('admin-panel').hidden = false;
-    renderAdminControls();
-    $('admin-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-  function exitAdmin() {
-    isAdmin = false;
-    $('admin-panel').hidden = true;
-  }
+  function exitAdmin() { setView('home'); }
 
   function wire() {
-    $('admin-btn').addEventListener('click', openAdmin);
+    // Sidebar nav
+    document.querySelectorAll('.sidebar-nav .nav-btn[data-view]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = btn.dataset.view;
+        if (v === 'admin') openAdmin(); else setView(v);
+      });
+    });
+    $('notification-status').addEventListener('click', () => requestNotificationPerm(true));
     $('exit-admin').addEventListener('click', exitAdmin);
     $('save-settings').addEventListener('click', saveSettings);
     $('banner-close').addEventListener('click', () => { $('banner').hidden = true; });
-    $('notification-status').addEventListener('click', () => requestNotificationPerm(true));
     $('passcode-ok').addEventListener('click', () => {
       const input = $('passcode-input').value;
-      if (input === config.adminPasscode) {
-        $('passcode-modal').hidden = true;
-        enterAdmin();
-      } else {
-        const el = $('passcode-input');
-        el.classList.remove('wrong-shake');
-        void el.offsetWidth;
-        el.classList.add('wrong-shake');
+      if (input === config.adminPasscode) { $('passcode-modal').hidden = true; setView('admin'); }
+      else {
+        const el = $('passcode-input'); el.classList.remove('wrong-shake'); void el.offsetWidth; el.classList.add('wrong-shake');
         setTimeout(() => el.classList.remove('wrong-shake'), 400);
       }
     });
-    $('passcode-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') $('passcode-ok').click();
-    });
-    $('passcode-cancel').addEventListener('click', () => {
-      $('passcode-modal').hidden = true;
-    });
+    $('passcode-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('passcode-ok').click(); });
+    $('passcode-cancel').addEventListener('click', () => { $('passcode-modal').hidden = true; });
     document.addEventListener('change', e => {
       if (e.target && e.target.id === 'setting-city') {
         const key = $('setting-city').value;
-        if (PRESETS[key]) {
-          $('setting-lat').value = PRESETS[key][0];
-          $('setting-lon').value = PRESETS[key][1];
-          $('setting-method').value = PRESETS[key][2];
-        }
+        if (PRESETS[key]) { $('setting-lat').value = PRESETS[key][0]; $('setting-lon').value = PRESETS[key][1]; $('setting-method').value = PRESETS[key][2]; }
       }
     });
+    // Pill tabs (decorative — all show today's schedule, with a soft visual response)
+    document.querySelectorAll('#pill-tabs .pill-tab').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('#pill-tabs .pill-tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+    // Click schedule-title also focuses schedule
+    const schedTitle = document.querySelector('.schedule-title');
+    if (schedTitle) schedTitle.addEventListener('click', () => setView('schedule'));
   }
 
   async function boot() {
@@ -1697,10 +2081,7 @@
     await refreshTimes();
     renderAll();
     setInterval(() => {
-      if (currentTimes && currentJamaats) {
-        renderHero();
-        renderPrayerList();
-      }
+      if (currentTimes && currentJamaats) { renderHero(); renderPrayerList(); }
     }, 1000);
     initDb();
   }
@@ -1708,5 +2089,5 @@
   boot();
 })();
 </script>
-</body>
-</html>
+
+</body></html>
