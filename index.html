@@ -1150,6 +1150,154 @@
   .modal-actions { display: flex; gap: var(--s-2); margin-top: var(--s-1); }
   .modal-actions .btn { flex: 1; }
 
+  /* ------- Notification controls (sidebar bell + admin volume/mute) ------- */
+  .nav-btn.notif-on {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .nav-btn.notif-on::after {
+    content: "";
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 2px var(--surface);
+  }
+  .nav-btn.notif-muted {
+    color: var(--muted);
+    opacity: 0.75;
+  }
+  .nav-btn.notif-muted::after {
+    content: "";
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--danger);
+    box-shadow: 0 0 0 2px var(--surface);
+  }
+  .nav-btn.notif-noperm {
+    color: var(--warn);
+  }
+
+  .notif-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    padding: var(--s-3) var(--s-4);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--r-2);
+    margin-bottom: var(--s-2);
+  }
+  .notif-row:last-child { margin-bottom: 0; }
+  .notif-label { flex: 1; min-width: 0; }
+  .notif-title { font-size: 14px; font-weight: 500; color: var(--fg); }
+  .notif-sub { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.02em; }
+  .notif-slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    min-width: 180px;
+    flex: 2;
+  }
+  .notif-slider-wrap .volume-value {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 38px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .notif-slider-wrap .icon {
+    width: 16px; height: 16px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* Purple range slider */
+  .purple-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    min-width: 0;
+    height: 6px;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    background: var(--border);
+    background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--p, 70%), var(--border) var(--p, 70%), var(--border) 100%);
+    transition: background var(--t-fast);
+  }
+  .purple-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--accent), 0 2px 6px rgba(122, 62, 219, 0.3);
+    cursor: pointer;
+    transition: transform var(--t) var(--spring);
+  }
+  .purple-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .purple-slider::-webkit-slider-thumb:active { transform: scale(0.95); }
+  .purple-slider::-moz-range-thumb {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--accent), 0 2px 6px rgba(122, 62, 219, 0.3);
+    cursor: pointer;
+  }
+  .purple-slider::-moz-range-track {
+    background: transparent;
+    height: 6px;
+  }
+  .purple-slider:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
+    border-radius: 999px;
+  }
+  .purple-slider.is-muted {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Toggle switch */
+  .toggle-switch {
+    width: 48px; height: 26px;
+    border-radius: 999px;
+    background: var(--border);
+    position: relative;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: background var(--t);
+    flex-shrink: 0;
+    font-family: inherit;
+  }
+  .toggle-switch .toggle-knob {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--surface);
+    box-shadow: 0 1px 3px rgba(42, 23, 87, 0.25);
+    transition: transform var(--t) var(--spring), background var(--t);
+  }
+  .toggle-switch[aria-checked="true"] { background: var(--accent); }
+  .toggle-switch[aria-checked="true"] .toggle-knob { transform: translateX(22px); }
+  .toggle-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .toggle-switch:hover { filter: brightness(0.97); }
+
+  @media (max-width: 640px) {
+    .notif-row { flex-direction: column; align-items: stretch; }
+    .notif-slider-wrap { min-width: 0; }
+  }
+
   /* ------- Members view ------- */
   .view-members {
     display: flex;
@@ -1311,6 +1459,8 @@
     <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
     <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.9 17.9 0 0 1 18 8"/><path d="M6.26 6.26A5.9 5.9 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><path d="M1 1l22 22"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M3 21a6 6 0 0 1 12 0"/><circle cx="17" cy="7" r="3"/><path d="M14 14a4 4 0 0 1 7 2v1"/></symbol>
@@ -1482,6 +1632,30 @@
         <article class="card admin-section">
           <h3><svg class="icon"><use href="#i-clock"/></svg> Jamaat times</h3>
           <div class="jamaat-section" id="jamaat-section"></div>
+        </article>
+
+        <article class="card admin-section">
+          <h3><svg class="icon"><use href="#i-bell"/></svg> Notifications (this device)</h3>
+          <div class="notif-row">
+            <div class="notif-label">
+              <div class="notif-title">Mute everything</div>
+              <div class="notif-sub">Turn off chimes, banners and desktop alerts on this device only.</div>
+            </div>
+            <button class="toggle-switch" id="mute-toggle" role="switch" aria-checked="false" aria-label="Mute all notifications" type="button">
+              <span class="toggle-knob"></span>
+            </button>
+          </div>
+          <div class="notif-row">
+            <div class="notif-label">
+              <div class="notif-title">Chime volume</div>
+              <div class="notif-sub">How loud the 3-tone chime plays on this device.</div>
+            </div>
+            <div class="notif-slider-wrap">
+              <svg class="icon"><use href="#i-volume"/></svg>
+              <input type="range" id="volume-slider" class="purple-slider" min="0" max="100" step="5" value="70" aria-label="Chime volume">
+              <span class="volume-value" id="volume-value">70%</span>
+            </div>
+          </div>
         </article>
 
         <article class="card admin-section">
@@ -1690,6 +1864,64 @@
   function storeName(n) {
     try { localStorage.setItem('jamaat_user_name', n); } catch (e) {}
   }
+  // --- Local notification preferences (per device) ---
+  function isMuted() {
+    try { return localStorage.getItem('jamaat_muted') === '1'; } catch (e) { return false; }
+  }
+  function setMuted(m) {
+    try { localStorage.setItem('jamaat_muted', m ? '1' : '0'); } catch (e) {}
+    updateBellUI();
+    const t = $('mute-toggle');
+    if (t) t.setAttribute('aria-checked', m ? 'true' : 'false');
+    const slider = $('volume-slider');
+    if (slider) slider.classList.toggle('is-muted', m);
+  }
+  function getVolume() {
+    try {
+      const v = parseInt(localStorage.getItem('jamaat_volume') || '70', 10);
+      return isFinite(v) ? Math.max(0, Math.min(100, v)) : 70;
+    } catch (e) { return 70; }
+  }
+  function setVolume(v) {
+    v = Math.max(0, Math.min(100, parseInt(v, 10) || 0));
+    try { localStorage.setItem('jamaat_volume', String(v)); } catch (e) {}
+    const slider = $('volume-slider');
+    const label = $('volume-value');
+    if (slider) { slider.value = v; slider.style.setProperty('--p', v + '%'); }
+    if (label) label.textContent = v + '%';
+  }
+
+  function updateBellUI() {
+    const btn = $('notification-status');
+    const tip = $('notif-tip');
+    if (!btn) return;
+    btn.classList.remove('notif-on', 'notif-muted', 'notif-noperm');
+    const useEl = btn.querySelector('svg use');
+    const muted = isMuted();
+    if (muted) {
+      if (useEl) useEl.setAttribute('href', '#i-bell-off');
+      btn.classList.add('notif-muted');
+      if (tip) tip.textContent = 'Muted · click to turn on';
+      return;
+    }
+    if (useEl) useEl.setAttribute('href', '#i-bell');
+    if (!('Notification' in window)) {
+      btn.classList.add('notif-noperm');
+      if (tip) tip.textContent = 'Notifications unavailable';
+      return;
+    }
+    if (Notification.permission === 'granted') {
+      btn.classList.add('notif-on');
+      if (tip) tip.textContent = 'Notifications on · click to mute';
+    } else if (Notification.permission === 'denied') {
+      btn.classList.add('notif-noperm');
+      if (tip) tip.textContent = 'Browser blocked · banner + chime still work';
+    } else {
+      btn.classList.add('notif-noperm');
+      if (tip) tip.textContent = 'Click to enable browser alerts';
+    }
+  }
+
   function avatarInitials(name) {
     if (!name) return '?';
     const parts = String(name).trim().split(/\s+/);
@@ -2166,35 +2398,28 @@
   }
 
   async function requestNotificationPerm(forceAsk) {
-    const btn = $('notification-status');
-    const tip = $('notif-tip');
-    if (!('Notification' in window)) { if (tip) tip.textContent = 'Notifications unavailable'; return; }
-    if (Notification.permission === 'granted') {
-      if (tip) tip.textContent = 'Notifications on';
-      btn.setAttribute('data-badge', '');
-      btn.style.setProperty('--_dot-color', 'var(--success)');
-      return;
-    }
-    if (Notification.permission === 'denied') { if (tip) tip.textContent = 'Notifications blocked'; return; }
-    if (!forceAsk) { if (tip) tip.textContent = 'Tap to enable notifications'; return; }
-    try {
-      const res = await Notification.requestPermission();
-      if (res === 'granted') { if (tip) tip.textContent = 'Notifications on'; }
-      else { if (tip) tip.textContent = 'Notifications off'; }
-    } catch (e) { console.error(e); }
+    if (!('Notification' in window)) { updateBellUI(); return; }
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') { updateBellUI(); return; }
+    if (!forceAsk) { updateBellUI(); return; }
+    try { await Notification.requestPermission(); } catch (e) { console.error(e); }
+    updateBellUI();
   }
 
   function playChime() {
+    if (isMuted()) return;
+    const volFrac = getVolume() / 100;
+    if (volFrac <= 0) return;
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const now = audioCtx.currentTime;
+      const peak = 0.16 * volFrac;
       [587.33, 783.99, 987.77].forEach((f, i) => {
         const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
         osc.frequency.value = f; osc.type = 'sine';
         const start = now + i*0.22;
         gain.gain.setValueAtTime(0, start);
-        gain.gain.linearRampToValueAtTime(0.16, start + 0.03);
+        gain.gain.linearRampToValueAtTime(peak, start + 0.03);
         gain.gain.exponentialRampToValueAtTime(0.001, start + 0.9);
         osc.connect(gain).connect(audioCtx.destination);
         osc.start(start); osc.stop(start + 0.95);
@@ -2213,6 +2438,7 @@
   }
 
   function notifyPrayer(prayer, kind) {
+    if (isMuted()) return;
     const name = PRAYER_LABELS[prayer] || prayer;
     const arabic = PRAYER_ARABIC[prayer] || '';
     const auto = kind === 'auto';
@@ -2402,7 +2628,31 @@
         else setView(v);
       });
     });
-    $('notification-status').addEventListener('click', () => requestNotificationPerm(true));
+    // Bell: click toggles mute. If permission not yet granted and we're turning ON, ask for it.
+    $('notification-status').addEventListener('click', async () => {
+      const currentlyMuted = isMuted();
+      if (currentlyMuted) {
+        setMuted(false);
+        if ('Notification' in window && Notification.permission === 'default') {
+          await requestNotificationPerm(true);
+        }
+      } else {
+        setMuted(true);
+      }
+      updateBellUI();
+    });
+    // Mute toggle in admin settings
+    $('mute-toggle').addEventListener('click', () => {
+      setMuted(!isMuted());
+    });
+    // Volume slider
+    $('volume-slider').addEventListener('input', e => {
+      setVolume(e.target.value);
+    });
+    $('volume-slider').addEventListener('change', e => {
+      // Preview chime (quick) on release so admin hears their chosen volume
+      playChime();
+    });
     $('exit-admin').addEventListener('click', exitAdmin);
     $('exit-members').addEventListener('click', exitAdmin);
     $('save-settings').addEventListener('click', saveSettings);
@@ -2444,6 +2694,11 @@
     userId = getOrCreateUserId();
     userName = getStoredName();
     renderProfile();
+    // Initialize notification prefs (volume slider, mute toggle, bell icon state)
+    setVolume(getVolume());
+    const mToggle = $('mute-toggle');
+    if (mToggle) mToggle.setAttribute('aria-checked', isMuted() ? 'true' : 'false');
+    updateBellUI();
     requestNotificationPerm(false);
     await refreshTimes();
     renderAll();
