@@ -827,7 +827,6 @@
 </style>
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/adhan@4.4.3/dist/adhan.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1008,6 +1007,13 @@
     maghrib: { mode: 'offset', offset: 5,  fixed: '18:30' },
     isha:    { mode: 'offset', offset: 20, fixed: '20:00' },
   };
+  // Aladhan API calculation method ids — see https://aladhan.com/calculation-methods
+  const ALADHAN_METHOD = {
+    Karachi: 1, NorthAmerica: 2, MuslimWorldLeague: 3, UmmAlQura: 4,
+    Egyptian: 5, Tehran: 7, Kuwait: 9, Qatar: 10, Singapore: 11,
+    Turkey: 13, MoonsightingCommittee: 15, Dubai: 16,
+  };
+  const timesCache = {};
   const PRESETS = {
     'Custom': null,
     'Karachi, PK': [24.8607, 67.0011, 'Karachi'],
@@ -1053,6 +1059,8 @@
   let isAdmin = false;
   let currentTimes = null;
   let currentJamaats = null;
+  let tomorrowTimes = null;
+  let tomorrowJamaats = null;
 
   function $(id) { return document.getElementById(id); }
 
@@ -1093,14 +1101,39 @@
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  function computeTimes(forDate) {
-    const d = forDate || new Date();
-    const coords = new adhan.Coordinates(config.lat, config.lon);
-    const methodFn = adhan.CalculationMethod[config.method] || adhan.CalculationMethod.Karachi;
-    const params = methodFn();
-    params.madhab = adhan.Madhab.Hanafi;
-    const times = new adhan.PrayerTimes(coords, d, params);
-    return { fajr: times.fajr, dhuhr: times.dhuhr, asr: times.asr, maghrib: times.maghrib, isha: times.isha };
+  async function fetchTimes(date) {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mo = String(date.getMonth() + 1).padStart(2, '0');
+    const y = date.getFullYear();
+    const dateStr = dd + '-' + mo + '-' + y;
+    const m = ALADHAN_METHOD[config.method] || 1;
+    const cacheKey = y + '-' + mo + '-' + dd + '_' + config.lat.toFixed(3) + '_' + config.lon.toFixed(3) + '_' + m;
+    if (timesCache[cacheKey]) return timesCache[cacheKey];
+    const url = 'https://api.aladhan.com/v1/timings/' + dateStr +
+                '?latitude=' + config.lat + '&longitude=' + config.lon +
+                '&method=' + m + '&school=1';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Aladhan API returned ' + res.status);
+    const json = await res.json();
+    if (!json || !json.data || !json.data.timings) throw new Error('Unexpected Aladhan API response');
+    const t = json.data.timings;
+    function parseHM(hhmm) {
+      const parts = String(hhmm).split(':');
+      const h = parseInt(parts[0], 10);
+      const mn = parseInt(parts[1], 10);
+      const dt = new Date(date);
+      dt.setHours(h, mn, 0, 0);
+      return dt;
+    }
+    const times = {
+      fajr: parseHM(t.Fajr),
+      dhuhr: parseHM(t.Dhuhr),
+      asr: parseHM(t.Asr),
+      maghrib: parseHM(t.Maghrib),
+      isha: parseHM(t.Isha),
+    };
+    timesCache[cacheKey] = times;
+    return times;
   }
 
   function computeJamaat(prayer, startTime) {
@@ -1131,11 +1164,10 @@
     for (const p of PRAYERS) {
       if (jamaats[p] > now) return { prayer: p, time: jamaats[p], start: starts[p], tomorrow: false };
     }
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const t = computeTimes(tomorrow);
-    const j = computeJamaats(t);
-    return { prayer: 'fajr', time: j.fajr, start: t.fajr, tomorrow: true };
+    if (tomorrowJamaats && tomorrowTimes) {
+      return { prayer: 'fajr', time: tomorrowJamaats.fajr, start: tomorrowTimes.fajr, tomorrow: true };
+    }
+    return { prayer: 'fajr', time: null, start: null, tomorrow: true };
   }
 
   function renderHero() {
@@ -1146,6 +1178,12 @@
     $('hijri-date').textContent = fmtHijri(new Date());
     $('next-name').textContent = PRAYER_LABELS[next.prayer] + (next.tomorrow ? ' · tomorrow' : '');
     $('next-arabic').textContent = PRAYER_ARABIC[next.prayer] || '';
+    if (!next.time) {
+      $('next-time').textContent = '—';
+      $('next-start').textContent = '';
+      $('countdown').textContent = '';
+      return;
+    }
     $('next-time').textContent = fmtTime(next.time);
     const startEl = $('next-start');
     if (startEl) {
@@ -1247,16 +1285,44 @@
     $('save-status').classList.remove('ok', 'err');
   }
 
-  function renderAll() {
+  async function refreshTimes() {
     try {
-      currentTimes = computeTimes();
+      $('footer-sync').textContent = 'fetching prayer times…';
+      currentTimes = await fetchTimes(new Date());
       currentJamaats = computeJamaats(currentTimes);
-    } catch (e) { console.error('compute failed', e); return; }
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrowTimes = await fetchTimes(tomorrow);
+      tomorrowJamaats = computeJamaats(tomorrowTimes);
+      return true;
+    } catch (e) {
+      console.error('Could not fetch prayer times:', e);
+      $('next-name').textContent = 'Could not fetch prayer times';
+      $('next-time').textContent = '';
+      $('next-arabic').textContent = '';
+      $('next-start').textContent = String(e.message || e);
+      $('countdown').textContent = 'retry in 30s';
+      $('footer-sync').textContent = 'offline — ' + (e.message || 'unknown error');
+      setTimeout(() => { renderAll(); }, 30000);
+      return false;
+    }
+  }
+
+  function renderAll() {
+    if (!currentTimes || !currentJamaats) {
+      refreshTimes().then(ok => { if (ok) renderAll(); });
+      return;
+    }
     renderHero();
     renderPrayerList();
     renderFooter();
     scheduleAutoReminders();
     if (isAdmin) renderAdminControls();
+  }
+
+  function recomputeJamaats() {
+    if (currentTimes) currentJamaats = computeJamaats(currentTimes);
+    if (tomorrowTimes) tomorrowJamaats = computeJamaats(tomorrowTimes);
   }
 
   function renderJamaatControls() {
@@ -1457,20 +1523,26 @@
             config.mutedDate = '';
           }
         } else {
-          await sb.from('config').upsert({ id: 'main', data: config });
+          await sb.from('config').upsert({ id: 'main', data: config }, { onConflict: 'id' });
         }
       } catch (e) { console.warn('config load', e); }
 
       sb.channel('config_main')
         .on('postgres_changes',
           { event: '*', schema: 'public', table: 'config', filter: 'id=eq.main' },
-          payload => {
+          async payload => {
             const d = payload.new && payload.new.data;
             if (!d) return;
+            const prevLat = config.lat, prevLon = config.lon, prevMethod = config.method;
             config = Object.assign({}, DEFAULT_CONFIG, d);
             if (config.mutedDate !== todayKey()) {
               config.mutedToday = {};
               config.mutedDate = '';
+            }
+            if (prevLat !== config.lat || prevLon !== config.lon || prevMethod !== config.method) {
+              await refreshTimes();
+            } else {
+              recomputeJamaats();
             }
             renderAll();
           })
@@ -1490,10 +1562,11 @@
         .subscribe();
 
       renderFooter();
+      await refreshTimes();
       renderAll();
     } catch (e) {
       console.error('db init failed', e);
-      $('footer-sync').textContent = 'local only';
+      $('footer-sync').textContent = 'local only — ' + (e.message || e);
     }
   }
 
@@ -1517,7 +1590,7 @@
     config.mutedToday = current;
     config.mutedDate = key;
     if (sb) {
-      try { await sb.from('config').upsert({ id: 'main', data: config }); } catch (_) {}
+      try { await sb.from('config').upsert({ id: 'main', data: config }, { onConflict: 'id' }); } catch (_) {}
     }
     renderAll();
     renderAdminControls();
@@ -1537,20 +1610,26 @@
     }
     const locationName = presetName === 'Custom' ? (lat.toFixed(2) + ', ' + lon.toFixed(2)) : presetName.split(',')[0];
     const jamaat = collectJamaatFromForm();
+    const prevLat = config.lat, prevLon = config.lon, prevMethod = config.method;
     const next = Object.assign({}, config, { lat, lon, method, leadMinutes: lead, adminPasscode: passcode, locationName, jamaat });
     config = next;
     if (sb) {
       try {
-        const { error } = await sb.from('config').upsert({ id: 'main', data: next });
+        const { error } = await sb.from('config').upsert({ id: 'main', data: next }, { onConflict: 'id' });
         if (error) throw error;
         $('save-status').textContent = 'Saved — your group will update.';
         $('save-status').classList.add('ok');
       } catch (e) {
-        $('save-status').textContent = 'Could not sync (saved locally for this session).';
+        $('save-status').textContent = 'Save failed: ' + (e.message || e);
         $('save-status').classList.add('err');
       }
     } else {
       $('save-status').textContent = 'Saved locally — Supabase not connected.';
+    }
+    if (prevLat !== lat || prevLon !== lon || prevMethod !== method) {
+      await refreshTimes();
+    } else {
+      recomputeJamaats();
     }
     renderAll();
   }
@@ -1614,35 +1693,19 @@
 
   async function boot() {
     wire();
-    renderAll();
     requestNotificationPerm(false);
+    await refreshTimes();
+    renderAll();
     setInterval(() => {
-      renderHero();
-      renderPrayerList();
+      if (currentTimes && currentJamaats) {
+        renderHero();
+        renderPrayerList();
+      }
     }, 1000);
     initDb();
   }
 
-  function waitForAdhan(cb) {
-    if (typeof adhan !== 'undefined' && adhan.CalculationMethod && adhan.Coordinates) {
-      cb();
-    } else {
-      let tries = 0;
-      const check = setInterval(() => {
-        tries++;
-        if (typeof adhan !== 'undefined' && adhan.CalculationMethod) {
-          clearInterval(check);
-          cb();
-        } else if (tries > 100) {
-          clearInterval(check);
-          $('next-name').textContent = 'Prayer-time library did not load';
-          $('next-time').textContent = 'Reload the page';
-        }
-      }, 50);
-    }
-  }
-
-  waitForAdhan(boot);
+  boot();
 })();
 </script>
 </body>
