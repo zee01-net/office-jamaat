@@ -231,8 +231,20 @@
     color: var(--on-black);
     cursor: pointer;
     transition: transform var(--t) var(--spring);
+    border: none;
+    position: relative;
   }
   .sidebar-foot:hover { transform: scale(1.06) rotate(-4deg); }
+  .sidebar-foot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .profile-avatar {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--on-black);
+    letter-spacing: 0;
+    text-transform: uppercase;
+    line-height: 1;
+  }
 
   /* -------------- MAIN -------------- */
   .main {
@@ -264,37 +276,43 @@
     margin: 2px 0 0;
     color: var(--fg);
   }
-  .top-bar h1 .accent-blob {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px; height: 44px;
-    background: var(--accent-soft);
-    color: var(--accent-ink);
-    border-radius: 999px;
-    margin: 0 6px;
-    vertical-align: middle;
-    animation: blob-breathe 4s ease-in-out infinite;
-  }
-  .top-bar h1 .accent-blob .rub { width: 20px; height: 20px; color: var(--gold); }
-  .top-bar h1 .dark-blob {
+  .top-bar h1 .live-chip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--black);
-    color: var(--on-black);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    padding: 4px 10px 4px 8px;
+    border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 2px 16px 2px 10px;
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0 4px;
+    margin-left: var(--s-3);
     vertical-align: middle;
-    letter-spacing: -0.01em;
+    position: relative;
+    top: -8px;
   }
-  .top-bar h1 .dark-blob .icon { width: 20px; height: 20px; stroke-width: 2; }
-  @keyframes blob-breathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.06); }
+  .top-bar h1 .live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    position: relative;
+  }
+  .top-bar h1 .live-dot::after {
+    content: "";
+    position: absolute; inset: -3px;
+    border-radius: 50%;
+    background: var(--success);
+    opacity: 0.25;
+    animation: live-pulse 2s ease-in-out infinite;
+  }
+  @keyframes live-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.25; }
+    50% { transform: scale(1.6); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .top-bar h1 .live-dot::after { animation: none; }
   }
   .top-eyebrow {
     font-size: 11px;
@@ -1132,6 +1150,114 @@
   .modal-actions { display: flex; gap: var(--s-2); margin-top: var(--s-1); }
   .modal-actions .btn { flex: 1; }
 
+  /* ------- Members view ------- */
+  .view-members {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    animation: fade-in var(--t) var(--ease) both;
+  }
+  .members-card { padding: var(--s-6); }
+  .members-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 var(--s-2);
+    color: var(--fg);
+  }
+  .members-head .icon { width: 20px; height: 20px; stroke-width: 1.75; vertical-align: -4px; margin-right: 6px; color: var(--accent); }
+  .members-count {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 4px 10px;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-radius: 999px;
+  }
+  .members-sub { color: var(--muted); font-size: 13px; margin: 0 0 var(--s-5); }
+  .members-list { display: flex; flex-direction: column; gap: var(--s-2); }
+  .member-row {
+    display: flex; align-items: center; gap: var(--s-4);
+    padding: var(--s-3) var(--s-4);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--r-2);
+    transition: border-color var(--t), transform var(--t);
+  }
+  .member-row:hover { border-color: var(--border-strong); }
+  .member-row.is-you { border-color: var(--accent); background: linear-gradient(90deg, var(--accent-soft), transparent 85%); }
+  .member-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-ink));
+    color: var(--on-black);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .member-row.is-you .member-avatar { background: linear-gradient(135deg, var(--black), var(--accent-ink)); }
+  .member-info { flex: 1; min-width: 0; }
+  .member-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .you-tag {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .member-sub { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.03em; }
+  .member-actions {
+    display: flex;
+    gap: var(--s-2);
+    align-items: center;
+  }
+  .member-ping, .member-remove {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 34px; height: 34px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: grid; place-items: center;
+    transition: color var(--t), border-color var(--t), background var(--t), transform var(--t);
+    font-family: inherit;
+  }
+  .member-ping:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: scale(1.08);
+  }
+  .member-ping:active { transform: scale(0.96); }
+  .member-ping:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .member-remove:hover { color: var(--danger); border-color: var(--danger); }
+  .member-remove:focus-visible { outline: 2px solid var(--danger); outline-offset: 2px; }
+  .member-ping .icon, .member-remove .icon { width: 15px; height: 15px; stroke-width: 2; }
+  .modal.modal-wide { max-width: 440px; }
+  .modal-wide .call-grid { gap: var(--s-2); }
+  .members-empty {
+    text-align: center;
+    padding: var(--s-7);
+    color: var(--muted);
+    font-size: 13px;
+    border: 1px dashed var(--border);
+    border-radius: var(--r-2);
+  }
+
   .wrong-shake { animation: shake 0.35s ease; border-color: var(--danger) !important; }
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
@@ -1149,10 +1275,9 @@
     .nav-tooltip { display: none; }
     .main { padding: var(--s-4) var(--s-3) var(--s-7); gap: var(--s-4); }
     .top-bar h1 { font-size: 30px; }
-    .top-bar h1 .accent-blob { width: 32px; height: 32px; }
-    .top-bar h1 .accent-blob .rub { width: 14px; height: 14px; }
-    .top-bar h1 .dark-blob { padding: 2px 12px 2px 8px; font-size: 22px; }
-    .top-bar h1 .dark-blob .icon { width: 16px; height: 16px; }
+    .top-bar h1 .live-chip { font-size: 10px; padding: 3px 8px 3px 6px; top: -4px; }
+    .top-bar h1 .live-dot { width: 6px; height: 6px; }
+    .pill-tabs, .accent-blob, .dark-blob { display: none; }
     .next-name { font-size: 42px; }
     .next-arabic { font-size: 44px; }
     .hero-card { grid-template-columns: 1fr; min-height: auto; }
@@ -1188,6 +1313,9 @@
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M3 21a6 6 0 0 1 12 0"/><circle cx="17" cy="7" r="3"/><path d="M14 14a4 4 0 0 1 7 2v1"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.7.6 2.5a2 2 0 0 1-.5 2.1L7.9 9.6a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.8.3 1.6.5 2.5.6a2 2 0 0 1 1.7 2z"/></symbol>
     <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
     <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></symbol>
@@ -1214,9 +1342,9 @@
         <svg class="icon"><use href="#i-home"/></svg>
         <span class="nav-tooltip">Home</span>
       </button>
-      <button class="nav-btn" data-view="schedule" aria-label="Schedule">
-        <svg class="icon"><use href="#i-calendar"/></svg>
-        <span class="nav-tooltip">Schedule</span>
+      <button class="nav-btn" id="members-btn" data-view="members" aria-label="Members">
+        <svg class="icon"><use href="#i-users"/></svg>
+        <span class="nav-tooltip">Members</span>
       </button>
       <button class="nav-btn" id="notification-status" data-badge="" aria-label="Notifications">
         <svg class="icon"><use href="#i-bell"/></svg>
@@ -1227,9 +1355,10 @@
         <span class="nav-tooltip">Settings</span>
       </button>
     </nav>
-    <div class="sidebar-foot" title="You" aria-label="Profile">
-      <svg class="icon"><use href="#i-user"/></svg>
-    </div>
+    <button class="sidebar-foot sidebar-profile" id="profile-btn" type="button" aria-label="Your name">
+      <span class="profile-avatar" id="profile-avatar">?</span>
+      <span class="nav-tooltip profile-tip" id="profile-tip">Set your name</span>
+    </button>
   </aside>
 
   <!-- MAIN -->
@@ -1238,10 +1367,8 @@
       <div>
         <div class="top-eyebrow"><span class="pulse-dot"></span><span id="hero-location">Setting up</span> · <span id="today-date">—</span></div>
         <h1>
-          Office
-          <span class="accent-blob"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></span>
-          Jamaat
-          <span class="dark-blob"><svg class="icon"><use href="#i-sparkle"/></svg> live</span>
+          Office Jamaat
+          <span class="live-chip" aria-label="live"><span class="live-dot"></span>live</span>
         </h1>
       </div>
       <div class="top-actions">
@@ -1255,14 +1382,6 @@
         </button>
       </div>
     </header>
-
-    <nav class="pill-tabs" id="pill-tabs" role="tablist">
-      <button class="pill-tab active" data-tab="today" role="tab">Today</button>
-      <button class="pill-tab" data-tab="week" role="tab">This week</button>
-      <button class="pill-tab" data-tab="qibla" role="tab">Qibla</button>
-      <button class="pill-tab" data-tab="members" role="tab">Members</button>
-      <button class="pill-tab" data-tab="history" role="tab">History</button>
-    </nav>
 
     <!-- HOME VIEW -->
     <section class="view-home" id="view-home">
@@ -1335,6 +1454,21 @@
         </div>
         <div class="prayer-stack" id="prayer-list"></div>
       </section>
+    </section>
+
+    <!-- MEMBERS VIEW (admin-locked) -->
+    <section class="view-members" id="view-members" hidden>
+      <article class="card members-card">
+        <h3 class="members-head">
+          <span><svg class="icon"><use href="#i-users"/></svg> Members</span>
+          <span class="members-count" id="members-count">0</span>
+        </h3>
+        <p class="members-sub">People who have opened the link and set their name.</p>
+        <div class="members-list" id="members-list"></div>
+      </article>
+      <button class="btn btn-secondary btn-full" id="exit-members" type="button">
+        <svg class="icon icon-sm"><use href="#i-x"/></svg> Back to home
+      </button>
     </section>
 
     <!-- ADMIN VIEW -->
@@ -1428,6 +1562,35 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="ping-modal" hidden>
+  <div class="modal modal-wide">
+    <div class="modal-crown"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></div>
+    <h2 id="ping-title">Call member</h2>
+    <p id="ping-sub">Which prayer should they be reminded of? Only they will get this notification.</p>
+    <div class="call-grid" id="ping-grid"></div>
+    <button class="btn btn-secondary btn-full" id="ping-cancel" type="button">
+      <svg class="icon icon-sm"><use href="#i-x"/></svg> Cancel
+    </button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="name-modal" hidden>
+  <div class="modal">
+    <div class="modal-crown"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></div>
+    <h2 id="name-modal-title">Welcome — what's your name?</h2>
+    <p id="name-modal-sub">So the group knows who's joined. You can change this anytime from the profile button at the bottom of the sidebar.</p>
+    <div class="form-row">
+      <input id="name-input" type="text" autocomplete="off" placeholder="e.g. Ahmed" maxlength="40">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="name-cancel" type="button" hidden>Cancel</button>
+      <button class="btn btn-full" id="name-ok" type="button">
+        <svg class="icon icon-sm"><use href="#i-check"/></svg> Save name
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function() {
   'use strict';
@@ -1503,6 +1666,37 @@
   let currentTimes = null, currentJamaats = null;
   let tomorrowTimes = null, tomorrowJamaats = null;
   let prevRenderedPrayer = null;
+  let membersList = [];
+  let userId = '';
+  let userName = '';
+  let currentView = 'home';
+
+  // --- User identity (localStorage) ---
+  function getOrCreateUserId() {
+    try {
+      let id = localStorage.getItem('jamaat_user_id');
+      if (!id) {
+        id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ('u-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10));
+        localStorage.setItem('jamaat_user_id', id);
+      }
+      return id;
+    } catch (e) {
+      return 'u-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+    }
+  }
+  function getStoredName() {
+    try { return localStorage.getItem('jamaat_user_name') || ''; } catch (e) { return ''; }
+  }
+  function storeName(n) {
+    try { localStorage.setItem('jamaat_user_name', n); } catch (e) {}
+  }
+  function avatarInitials(name) {
+    if (!name) return '?';
+    const parts = String(name).trim().split(/\s+/);
+    if (!parts.length || !parts[0]) return '?';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
 
   const $ = id => document.getElementById(id);
 
@@ -1818,6 +2012,159 @@
     return out;
   }
 
+  // --- Members ---
+  function renderProfile() {
+    const btn = $('profile-btn');
+    const av = $('profile-avatar');
+    const tip = $('profile-tip');
+    if (!btn) return;
+    av.textContent = userName ? avatarInitials(userName) : '?';
+    tip.textContent = userName ? userName + ' · click to change' : 'Click to set your name';
+  }
+  function renderMembers() {
+    const list = $('members-list');
+    const count = $('members-count');
+    if (!list) return;
+    count.textContent = String(membersList.length);
+    if (!membersList.length) {
+      list.innerHTML = '<div class="members-empty">No one has joined yet. Share the link with your group and they will appear here once they open the app and set a name.</div>';
+      return;
+    }
+    const rows = membersList.map(m => {
+      const isYou = m.id === userId;
+      const joined = m.joined_at ? new Date(m.joined_at).toLocaleDateString([], { month: 'short', day: 'numeric' }) : '';
+      const seen = m.last_seen ? new Date(m.last_seen) : null;
+      let seenLabel = '';
+      if (seen) {
+        const ms = Date.now() - seen.getTime();
+        if (ms < 60000) seenLabel = 'active now';
+        else if (ms < 3600000) seenLabel = Math.floor(ms / 60000) + 'm ago';
+        else if (ms < 86400000) seenLabel = Math.floor(ms / 3600000) + 'h ago';
+        else seenLabel = seen.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      }
+      const actions = isYou ? '' :
+        '<div class="member-actions">' +
+          '<button class="member-ping" type="button" data-id="' + escapeHtml(m.id) + '" data-name="' + escapeHtml(m.name || '') + '" aria-label="Call ' + escapeHtml(m.name || 'member') + '" title="Call this member for jamaat">' +
+            '<svg class="icon"><use href="#i-bell"/></svg>' +
+          '</button>' +
+          '<button class="member-remove" type="button" data-id="' + escapeHtml(m.id) + '" aria-label="Remove" title="Remove from list">' +
+            '<svg class="icon"><use href="#i-trash"/></svg>' +
+          '</button>' +
+        '</div>';
+      return '<div class="member-row ' + (isYou ? 'is-you' : '') + '" data-id="' + escapeHtml(m.id) + '">' +
+        '<span class="member-avatar">' + escapeHtml(avatarInitials(m.name)) + '</span>' +
+        '<div class="member-info">' +
+          '<div class="member-name">' + escapeHtml(m.name || '—') + (isYou ? ' <span class="you-tag">you</span>' : '') + '</div>' +
+          '<div class="member-sub">joined ' + escapeHtml(joined) + (seenLabel ? ' · last seen ' + escapeHtml(seenLabel) : '') + '</div>' +
+        '</div>' +
+        actions +
+        '</div>';
+    }).join('');
+    list.innerHTML = rows;
+    list.querySelectorAll('.member-remove').forEach(btn => {
+      btn.addEventListener('click', () => removeMember(btn.dataset.id));
+    });
+    list.querySelectorAll('.member-ping').forEach(btn => {
+      btn.addEventListener('click', () => openPingModal(btn.dataset.id, btn.dataset.name));
+    });
+  }
+
+  // --- Direct ping (admin → one member) ---
+  function openPingModal(targetId, targetName) {
+    const niceName = targetName || 'member';
+    $('ping-title').textContent = 'Call ' + niceName;
+    $('ping-sub').textContent = 'Which prayer should ' + niceName + ' be reminded of? Only they will get this notification.';
+    const grid = $('ping-grid');
+    grid.innerHTML = PRAYERS.map(p =>
+      '<button class="call-btn" type="button" data-prayer="' + p + '">' +
+        '<div class="call-btn-row">' +
+          '<span class="call-btn-name">' + PRAYER_LABELS[p] + '</span>' +
+          '<span class="call-btn-arabic" dir="rtl">' + PRAYER_ARABIC[p] + '</span>' +
+        '</div>' +
+        '<span class="call-btn-sub">ping ' + escapeHtml(niceName.split(' ')[0]) + '</span>' +
+      '</button>'
+    ).join('');
+    grid.querySelectorAll('.call-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        $('ping-modal').hidden = true;
+        await pingMember(targetId, btn.dataset.prayer);
+      });
+    });
+    $('ping-modal').hidden = false;
+  }
+  async function pingMember(targetId, prayer) {
+    try {
+      if (!sb) return;
+      await sb.from('triggers').insert({ prayer, created_at: Date.now(), target_id: targetId });
+    } catch (e) { console.error('ping failed', e); }
+  }
+  async function loadMembers() {
+    if (!sb) return;
+    try {
+      const { data, error } = await sb.from('members').select('*').order('joined_at', { ascending: true });
+      if (error) throw error;
+      membersList = data || [];
+      renderMembers();
+    } catch (e) { console.warn('members load', e); }
+  }
+  async function saveMemberName(newName) {
+    userName = newName;
+    storeName(newName);
+    renderProfile();
+    if (!sb) return;
+    try {
+      await sb.from('members').upsert({
+        id: userId, name: newName, last_seen: new Date().toISOString()
+      }, { onConflict: 'id' });
+      await loadMembers();
+    } catch (e) { console.warn('member save', e); }
+  }
+  async function touchLastSeen() {
+    if (!sb || !userName) return;
+    try {
+      await sb.from('members').update({ last_seen: new Date().toISOString() }).eq('id', userId);
+    } catch (e) {}
+  }
+  async function removeMember(id) {
+    if (!sb) return;
+    if (!confirm('Remove this member from the list?')) return;
+    try {
+      await sb.from('members').delete().eq('id', id);
+      await loadMembers();
+    } catch (e) { console.warn('remove', e); }
+  }
+
+  function openNameModal(isFirstTime) {
+    const modal = $('name-modal');
+    const input = $('name-input');
+    const title = $('name-modal-title');
+    const sub = $('name-modal-sub');
+    const cancel = $('name-cancel');
+    if (isFirstTime) {
+      title.textContent = "Welcome — what's your name?";
+      sub.textContent = "So your group knows who's joined. You can change this anytime from the profile button at the bottom of the sidebar.";
+      cancel.hidden = true;
+    } else {
+      title.textContent = 'Change your name';
+      sub.textContent = 'Update how your group sees you.';
+      cancel.hidden = false;
+    }
+    input.value = userName || '';
+    modal.hidden = false;
+    setTimeout(() => input.focus(), 10);
+  }
+  async function submitNameModal() {
+    const v = ($('name-input').value || '').trim();
+    if (!v) {
+      const el = $('name-input');
+      el.classList.remove('wrong-shake'); void el.offsetWidth; el.classList.add('wrong-shake');
+      setTimeout(() => el.classList.remove('wrong-shake'), 500);
+      return;
+    }
+    $('name-modal').hidden = true;
+    await saveMemberName(v);
+  }
+
   async function requestNotificationPerm(forceAsk) {
     const btn = $('notification-status');
     const tip = $('notif-tip');
@@ -1869,8 +2216,13 @@
     const name = PRAYER_LABELS[prayer] || prayer;
     const arabic = PRAYER_ARABIC[prayer] || '';
     const auto = kind === 'auto';
-    const title = auto ? name + ' in ' + config.leadMinutes + ' minutes' : 'Call for ' + name + ' jamaat';
-    const msg = auto ? 'Jamaat shortly — wrap up and head over.' : 'Everyone — ' + name + ' is being called now.';
+    const ping = kind === 'ping';
+    const title = auto ? name + ' in ' + config.leadMinutes + ' minutes'
+                 : ping ? 'Admin is calling you for ' + name
+                 : 'Call for ' + name + ' jamaat';
+    const msg = auto ? 'Jamaat shortly — wrap up and head over.'
+                : ping ? (userName ? userName + ', please head to ' + name + ' jamaat.' : 'Please head to ' + name + ' jamaat.')
+                : 'Everyone — ' + name + ' is being called now.';
     showBanner(title, msg, arabic); playChime();
     if ('Notification' in window && Notification.permission === 'granted') {
       try {
@@ -1947,7 +2299,9 @@
             if (seenTriggers.has(row.id)) return;
             seenTriggers.add(row.id);
             if (!row.created_at || (Date.now() - Number(row.created_at)) > 90000) return;
-            if (row.prayer) notifyPrayer(row.prayer, 'manual');
+            // Direct ping: deliver only to the targeted user
+            if (row.target_id && row.target_id !== userId) return;
+            if (row.prayer) notifyPrayer(row.prayer, row.target_id ? 'ping' : 'manual');
           })
         .subscribe();
 
@@ -2006,33 +2360,36 @@
     renderAll();
   }
 
+  // Target of the passcode gate — 'admin' or 'members'
+  let passcodeTarget = 'admin';
+
   function setView(view) {
-    const home = $('view-home'), admin = $('view-admin');
-    if (view === 'admin') { home.hidden = true; admin.hidden = false; isAdmin = true; renderAdminControls(); }
-    else { home.hidden = false; admin.hidden = true; isAdmin = false; }
-    document.querySelectorAll('.sidebar-nav .nav-btn[data-view]').forEach(b => {
-      b.classList.toggle('active', b.dataset.view === view || (view === 'schedule' && b.dataset.view === 'home') ? true : b.dataset.view === view);
-    });
-    // Precise active handling
+    const home = $('view-home'), admin = $('view-admin'), members = $('view-members');
+    home.hidden = true; admin.hidden = true; members.hidden = true;
+    isAdmin = false;
+    if (view === 'admin') { admin.hidden = false; isAdmin = true; renderAdminControls(); }
+    else if (view === 'members') { members.hidden = false; renderMembers(); loadMembers(); }
+    else { home.hidden = false; view = 'home'; }
+    currentView = view;
     document.querySelectorAll('.sidebar-nav .nav-btn[data-view]').forEach(b => b.classList.remove('active'));
     const active = document.querySelector('.sidebar-nav .nav-btn[data-view="' + view + '"]');
     if (active) active.classList.add('active');
-    if (view === 'schedule') {
-      const el = document.querySelector('#view-home .schedule-head');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    if (view === 'admin') {
-      setTimeout(() => admin.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    if (view === 'admin' || view === 'members') {
+      const el = view === 'admin' ? admin : members;
+      setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     }
   }
 
-  function openAdmin() {
+  function openGated(target) {
+    passcodeTarget = target;
     if (config.adminPasscode) {
       $('passcode-modal').hidden = false;
       $('passcode-input').value = '';
       setTimeout(() => $('passcode-input').focus(), 10);
-    } else { setView('admin'); }
+    } else { setView(target); }
   }
+  function openAdmin() { openGated('admin'); }
+  function openMembers() { openGated('members'); }
   function exitAdmin() { setView('home'); }
 
   function wire() {
@@ -2040,16 +2397,19 @@
     document.querySelectorAll('.sidebar-nav .nav-btn[data-view]').forEach(btn => {
       btn.addEventListener('click', () => {
         const v = btn.dataset.view;
-        if (v === 'admin') openAdmin(); else setView(v);
+        if (v === 'admin') openAdmin();
+        else if (v === 'members') openMembers();
+        else setView(v);
       });
     });
     $('notification-status').addEventListener('click', () => requestNotificationPerm(true));
     $('exit-admin').addEventListener('click', exitAdmin);
+    $('exit-members').addEventListener('click', exitAdmin);
     $('save-settings').addEventListener('click', saveSettings);
     $('banner-close').addEventListener('click', () => { $('banner').hidden = true; });
     $('passcode-ok').addEventListener('click', () => {
       const input = $('passcode-input').value;
-      if (input === config.adminPasscode) { $('passcode-modal').hidden = true; setView('admin'); }
+      if (input === config.adminPasscode) { $('passcode-modal').hidden = true; setView(passcodeTarget); }
       else {
         const el = $('passcode-input'); el.classList.remove('wrong-shake'); void el.offsetWidth; el.classList.add('wrong-shake');
         setTimeout(() => el.classList.remove('wrong-shake'), 400);
@@ -2063,27 +2423,54 @@
         if (PRESETS[key]) { $('setting-lat').value = PRESETS[key][0]; $('setting-lon').value = PRESETS[key][1]; $('setting-method').value = PRESETS[key][2]; }
       }
     });
-    // Pill tabs (decorative — all show today's schedule, with a soft visual response)
-    document.querySelectorAll('#pill-tabs .pill-tab').forEach(t => {
-      t.addEventListener('click', () => {
-        document.querySelectorAll('#pill-tabs .pill-tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
-      });
-    });
-    // Click schedule-title also focuses schedule
+    // Profile button (change name)
+    $('profile-btn').addEventListener('click', () => openNameModal(false));
+    // Ping modal
+    $('ping-cancel').addEventListener('click', () => { $('ping-modal').hidden = true; });
+    // Name modal
+    $('name-ok').addEventListener('click', submitNameModal);
+    $('name-cancel').addEventListener('click', () => { $('name-modal').hidden = true; });
+    $('name-input').addEventListener('keydown', e => { if (e.key === 'Enter') submitNameModal(); });
+    // Click schedule-title scrolls schedule into view
     const schedTitle = document.querySelector('.schedule-title');
-    if (schedTitle) schedTitle.addEventListener('click', () => setView('schedule'));
+    if (schedTitle) schedTitle.addEventListener('click', () => {
+      const el = document.querySelector('#view-home .schedule-head');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   }
 
   async function boot() {
     wire();
+    userId = getOrCreateUserId();
+    userName = getStoredName();
+    renderProfile();
     requestNotificationPerm(false);
     await refreshTimes();
     renderAll();
     setInterval(() => {
       if (currentTimes && currentJamaats) { renderHero(); renderPrayerList(); }
     }, 1000);
-    initDb();
+    await initDb();
+    // Load members list and reconcile user name with server
+    if (sb) {
+      await loadMembers();
+      const me = membersList.find(m => m.id === userId);
+      if (me && me.name && !userName) { userName = me.name; storeName(me.name); renderProfile(); }
+      else if (userName) { await saveMemberName(userName); }
+    }
+    // First-time name prompt
+    if (!userName) {
+      openNameModal(true);
+    } else {
+      touchLastSeen();
+    }
+    // Live members subscription
+    if (sb) {
+      sb.channel('members_watch').on('postgres_changes',
+        { event: '*', schema: 'public', table: 'members' },
+        () => { if (currentView === 'members') loadMembers(); }
+      ).subscribe();
+    }
   }
 
   boot();
