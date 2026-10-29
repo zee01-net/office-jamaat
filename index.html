@@ -1150,6 +1150,68 @@
   .modal-actions { display: flex; gap: var(--s-2); margin-top: var(--s-1); }
   .modal-actions .btn { flex: 1; }
 
+  /* ------- Jamaat row: weekly day picker ------- */
+  .jamaat-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+  .jamaat-main {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--s-3);
+    align-items: center;
+  }
+  .jamaat-days {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding-top: var(--s-2);
+    border-top: 1px dashed var(--border);
+    flex-wrap: wrap;
+  }
+  .jamaat-days-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .day-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .day-pill {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0;
+    cursor: pointer;
+    display: inline-grid;
+    place-items: center;
+    transition: background var(--t) var(--spring), color var(--t), border-color var(--t), transform var(--t);
+  }
+  .day-pill:hover { color: var(--fg); border-color: var(--accent); }
+  .day-pill:active { transform: scale(0.92); }
+  .day-pill.on {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--surface);
+    box-shadow: 0 2px 6px rgba(122, 62, 219, 0.25);
+  }
+  .day-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (max-width: 480px) {
+    .day-pill { width: 28px; height: 28px; font-size: 10px; }
+    .jamaat-days-label { font-size: 9px; }
+  }
+
   /* ------- Notification controls (sidebar bell + admin volume/mute) ------- */
   .nav-btn.notif-on {
     color: var(--accent);
@@ -1781,13 +1843,16 @@
   const PRAYER_ARABIC = {
     fajr: 'الفجر', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء',
   };
+  // days array is Sunday..Saturday (JS getDay() order). 1 = reminder fires that day.
   const JAMAAT_DEFAULT = {
-    fajr:    { mode: 'offset', offset: 20, fixed: '05:45' },
-    dhuhr:   { mode: 'offset', offset: 20, fixed: '13:00' },
-    asr:     { mode: 'offset', offset: 20, fixed: '16:30' },
-    maghrib: { mode: 'offset', offset: 5,  fixed: '18:30' },
-    isha:    { mode: 'offset', offset: 20, fixed: '20:00' },
+    fajr:    { mode: 'offset', offset: 20, fixed: '05:45', days: [1,1,1,1,1,1,1] },
+    dhuhr:   { mode: 'offset', offset: 20, fixed: '13:00', days: [1,1,1,1,1,1,1] },
+    asr:     { mode: 'offset', offset: 20, fixed: '16:30', days: [1,1,1,1,1,1,1] },
+    maghrib: { mode: 'offset', offset: 5,  fixed: '18:30', days: [1,1,1,1,1,1,1] },
+    isha:    { mode: 'offset', offset: 20, fixed: '20:00', days: [1,1,1,1,1,1,1] },
   };
+  const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const DAY_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const PRESETS = {
     'Custom': null,
     'Karachi, PK': [24.8607, 67.0011, 'Karachi'],
@@ -2201,19 +2266,29 @@
     const current = config.jamaat || JAMAAT_DEFAULT;
     section.innerHTML = PRAYERS.map(p => {
       const j = Object.assign({}, JAMAAT_DEFAULT[p], current[p] || {});
+      const days = (Array.isArray(j.days) && j.days.length === 7) ? j.days.slice() : [1,1,1,1,1,1,1];
       const isOffset = j.mode !== 'fixed';
+      const dayPills = DAY_LABELS.map((lab, idx) =>
+        '<button type="button" class="day-pill ' + (days[idx] ? 'on' : '') + '" data-day="' + idx + '" aria-label="' + DAY_FULL[idx] + '" title="' + DAY_FULL[idx] + '" aria-pressed="' + (days[idx] ? 'true' : 'false') + '">' + lab + '</button>'
+      ).join('');
       return '<div class="jamaat-row" data-prayer="' + p + '">' +
-        '<div class="jamaat-head">' +
-          '<span class="jamaat-eng">' + PRAYER_LABELS[p] + '</span>' +
-          '<span class="jamaat-ar" dir="rtl">' + PRAYER_ARABIC[p] + '</span>' +
-        '</div>' +
-        '<div class="jamaat-controls">' +
-          '<div class="segmented">' +
-            '<button type="button" class="seg-btn ' + (isOffset?'active':'') + '" data-mode="offset">+ min</button>' +
-            '<button type="button" class="seg-btn ' + (isOffset?'':'active') + '" data-mode="fixed">at</button>' +
+        '<div class="jamaat-main">' +
+          '<div class="jamaat-head">' +
+            '<span class="jamaat-eng">' + PRAYER_LABELS[p] + '</span>' +
+            '<span class="jamaat-ar" dir="rtl">' + PRAYER_ARABIC[p] + '</span>' +
           '</div>' +
-          '<input type="number" class="jamaat-input offset-input" min="0" max="120" value="' + j.offset + '"' + (isOffset?'':' hidden') + '>' +
-          '<input type="time" class="jamaat-input fixed-input" value="' + j.fixed + '"' + (isOffset?' hidden':'') + '>' +
+          '<div class="jamaat-controls">' +
+            '<div class="segmented">' +
+              '<button type="button" class="seg-btn ' + (isOffset?'active':'') + '" data-mode="offset">+ min</button>' +
+              '<button type="button" class="seg-btn ' + (isOffset?'':'active') + '" data-mode="fixed">at</button>' +
+            '</div>' +
+            '<input type="number" class="jamaat-input offset-input" min="0" max="120" value="' + j.offset + '"' + (isOffset?'':' hidden') + '>' +
+            '<input type="time" class="jamaat-input fixed-input" value="' + j.fixed + '"' + (isOffset?' hidden':'') + '>' +
+          '</div>' +
+        '</div>' +
+        '<div class="jamaat-days">' +
+          '<span class="jamaat-days-label">Reminder days</span>' +
+          '<div class="day-pills">' + dayPills + '</div>' +
         '</div>' +
       '</div>';
     }).join('');
@@ -2226,6 +2301,12 @@
         segBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
         offsetInput.hidden = (mode !== 'offset'); fixedInput.hidden = (mode !== 'fixed');
       }));
+      row.querySelectorAll('.day-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          const on = pill.classList.toggle('on');
+          pill.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+      });
     });
   }
 
@@ -2239,7 +2320,12 @@
       const offRaw = parseInt(row.querySelector('.offset-input').value, 10);
       const offset = Math.max(0, Math.min(120, isFinite(offRaw) ? offRaw : 20));
       const fixed = row.querySelector('.fixed-input').value || JAMAAT_DEFAULT[p].fixed;
-      out[p] = { mode, offset, fixed };
+      const days = [0,0,0,0,0,0,0];
+      row.querySelectorAll('.day-pill').forEach(pill => {
+        const idx = parseInt(pill.dataset.day, 10);
+        if (isFinite(idx) && pill.classList.contains('on')) days[idx] = 1;
+      });
+      out[p] = { mode, offset, fixed, days };
     });
     return out;
   }
@@ -2443,26 +2529,45 @@
     const arabic = PRAYER_ARABIC[prayer] || '';
     const auto = kind === 'auto';
     const ping = kind === 'ping';
-    const title = auto ? name + ' in ' + config.leadMinutes + ' minutes'
-                 : ping ? 'Admin is calling you for ' + name
-                 : 'Call for ' + name + ' jamaat';
-    const msg = auto ? 'Jamaat shortly — wrap up and head over.'
-                : ping ? (userName ? userName + ', please head to ' + name + ' jamaat.' : 'Please head to ' + name + ' jamaat.')
-                : 'Everyone — ' + name + ' is being called now.';
-    showBanner(title, msg, arabic); playChime();
+
+    let notifTitle, notifBody, bannerTitle, bannerBody;
+    if (auto) {
+      notifTitle = name + ' in ' + config.leadMinutes + ' minutes';
+      notifBody  = 'حي على الصلاة — wrap up and head over.';
+      bannerTitle = name + ' in ' + config.leadMinutes + ' minutes';
+      bannerBody  = 'Jamaat shortly — wrap up and head over.';
+    } else if (ping) {
+      notifTitle = 'A fellow Muslim invites you to pray ' + name + '.';
+      notifBody  = 'حي على الصلاة — wrap up and head over.';
+      bannerTitle = 'A fellow Muslim invites you to pray ' + name + '.';
+      bannerBody  = userName ? userName + ', please head to ' + name + ' jamaat.'
+                             : 'Please head to ' + name + ' jamaat.';
+    } else {
+      notifTitle = 'Office Call for ' + name;
+      notifBody  = 'حي على الفلاح — wrap up and head over.';
+      bannerTitle = 'Office Call for ' + name + ' jamaat';
+      bannerBody  = 'حي على الصلاة';
+    }
+    showBanner(bannerTitle, bannerBody, arabic); playChime();
     if ('Notification' in window && Notification.permission === 'granted') {
       try {
-        const n = new Notification(title, { body: msg, tag: 'jamaat-' + prayer + '-' + (auto?'auto':'manual'), silent: false });
+        const n = new Notification(notifTitle, { body: notifBody, tag: 'jamaat-' + prayer + '-' + kind, silent: false });
         setTimeout(() => { try { n.close(); } catch(_){} }, 60000);
       } catch(e){}
     }
   }
 
   function clearTimers() { timers.forEach(t => clearTimeout(t)); timers = []; }
+  function isDayEnabled(prayer, dateObj) {
+    const j = (config.jamaat && config.jamaat[prayer]) || JAMAAT_DEFAULT[prayer];
+    const days = (j && Array.isArray(j.days) && j.days.length === 7) ? j.days : [1,1,1,1,1,1,1];
+    return days[dateObj.getDay()] === 1;
+  }
   function scheduleAutoReminders() {
     clearTimers(); if (!currentJamaats) return;
     const now = new Date(), todayK = todayKey();
     for (const p of PRAYERS) {
+      if (!isDayEnabled(p, now)) continue;
       const t = currentJamaats[p];
       const remindAt = new Date(t.getTime() - config.leadMinutes*60000);
       if (remindAt > now) {
@@ -2470,6 +2575,7 @@
         if (delay > 2147483000) continue;
         timers.push(setTimeout(() => {
           if (config.mutedToday[prayer] && config.mutedDate === todayK) return;
+          if (!isDayEnabled(prayer, new Date())) return;
           notifyPrayer(prayer, 'auto');
         }, delay));
       }
