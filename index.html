@@ -119,6 +119,7 @@
   /* -------------- ICONS (consistent sprite) -------------- */
   .icon { width: 22px; height: 22px; display: inline-block; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
   .icon-sm { width: 16px; height: 16px; stroke-width: 2; }
+  .icon-xs { width: 12px; height: 12px; stroke-width: 2; }
   .icon-lg { width: 28px; height: 28px; }
 
   /* -------------- APP LAYOUT -------------- */
@@ -1100,23 +1101,63 @@
     color: #fff;
     filter: none;
   }
-  .admin-exit-row {
-    display: flex; gap: var(--s-3);
-    margin-top: var(--s-4);
+  /* Admin session status bar (sits above the admin & members panels) */
+  .admin-session-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding: var(--s-2) var(--s-3) var(--s-2) var(--s-4);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    margin-bottom: var(--s-4);
+    animation: adminBarIn 0.25s var(--spring);
   }
-  .admin-exit-row .btn { flex: 1; }
-  .admin-session-note {
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-    margin-top: var(--s-2);
-    letter-spacing: 0.02em;
+  @keyframes adminBarIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .admin-session-note .admin-session-countdown {
+  .admin-session-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent-ink);
+    letter-spacing: 0.01em;
+  }
+  .admin-session-chip .icon { color: var(--accent); }
+  .admin-session-chip .admin-session-sep { color: var(--accent); opacity: 0.6; margin: 0 2px; }
+  .admin-session-countdown {
     font-family: var(--mono);
-    color: var(--accent);
     font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    min-width: 36px;
   }
+  .admin-session-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--accent-ink);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color var(--t), background var(--t), border-color var(--t);
+  }
+  .admin-session-logout:hover {
+    color: #fff;
+    background: var(--danger);
+    border-color: var(--danger);
+  }
+  .admin-session-logout .icon { width: 14px; height: 14px; }
+  .admin-session-logout:focus-visible { outline: 2px solid var(--danger); outline-offset: 2px; }
 
   .save-status {
     display: inline-flex; align-items: center; gap: var(--s-2);
@@ -1241,41 +1282,22 @@
   }
 
   /* ------- Notification controls (sidebar bell + admin volume/mute) ------- */
-  .nav-btn.notif-on {
-    color: var(--accent);
-    background: var(--accent-soft);
-    box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 2px rgba(122, 62, 219, 0.15);
+  /* Bell: pure icon state — filled when ON, outline when OFF. No background. */
+  .nav-btn.nav-bell {
+    background: transparent;
   }
-  .nav-btn.notif-on .icon { filter: drop-shadow(0 0 4px rgba(122, 62, 219, 0.45)); }
-  .nav-btn.notif-on::after {
-    content: "";
-    position: absolute;
-    top: 8px; right: 8px;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--success);
-    box-shadow: 0 0 0 2px var(--surface), 0 0 6px var(--success);
-    animation: bellPulse 2s ease-in-out infinite;
-  }
-  @keyframes bellPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.25); opacity: 0.75; }
-  }
-  .nav-btn.notif-muted {
-    color: var(--muted);
-    opacity: 0.75;
-  }
-  .nav-btn.notif-muted::after {
-    content: "";
-    position: absolute;
-    top: 8px; right: 8px;
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--danger);
-    box-shadow: 0 0 0 2px var(--surface);
-  }
-  .nav-btn.notif-noperm {
-    color: var(--warn);
+  .nav-btn.notif-on       { color: var(--accent); background: transparent; box-shadow: none; }
+  .nav-btn.notif-muted    { color: var(--muted); opacity: 1; background: transparent; box-shadow: none; }
+  .nav-btn.notif-noperm   { color: var(--muted); background: transparent; box-shadow: none; }
+  .nav-btn.nav-bell:hover { background: var(--surface-raised); }
+
+  /* Sidebar divider: a thin inset line between the two nav groups */
+  .nav-divider {
+    width: 24px;
+    height: 1px;
+    margin: var(--s-2) auto;
+    background: var(--border);
+    opacity: 0.7;
   }
 
   .notif-row {
@@ -1492,7 +1514,52 @@
   .member-ping:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .member-remove:hover { color: var(--danger); border-color: var(--danger); }
   .member-remove:focus-visible { outline: 2px solid var(--danger); outline-offset: 2px; }
-  .member-ping .icon, .member-remove .icon { width: 15px; height: 15px; stroke-width: 2; }
+  .member-ping .icon, .member-remove .icon, .member-mod .icon { width: 15px; height: 15px; stroke-width: 2; }
+  .member-mod {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 34px; height: 34px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: grid; place-items: center;
+    transition: color var(--t), border-color var(--t), background var(--t), transform var(--t);
+    font-family: inherit;
+  }
+  .member-mod:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); transform: scale(1.08); }
+  .member-mod:active { transform: scale(0.96); }
+  .member-mod:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .member-mod.is-on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+  .member-mod.is-on .icon { fill: var(--accent); }
+
+  .mod-tag {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .member-row.is-mod { box-shadow: inset 2px 0 0 var(--accent); }
+
+  .role-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent);
+    border-radius: var(--r-2);
+    font-size: 13px;
+    margin-bottom: var(--s-4);
+  }
+  .role-banner .icon { color: var(--accent); }
   .modal.modal-wide { max-width: 440px; }
   .modal-wide .call-grid { gap: var(--s-2); }
   .members-empty {
@@ -1560,6 +1627,7 @@
     <symbol id="i-bell-on" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5z" fill="currentColor" stroke="currentColor"/><path d="M10 20a2 2 0 0 0 4 0" fill="none"/></symbol>
     <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.9 17.9 0 0 1 18 8"/><path d="M6.26 6.26A5.9 5.9 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><path d="M1 1l22 22"/></symbol>
     <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z"/><path d="M9 12l2 2 4-4"/></symbol>
     <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
@@ -1592,13 +1660,14 @@
         <svg class="icon"><use href="#i-home"/></svg>
         <span class="nav-tooltip">Home</span>
       </button>
+      <button class="nav-btn nav-bell" id="notification-status" data-badge="" aria-label="Notifications">
+        <svg class="icon"><use href="#i-bell"/></svg>
+        <span class="nav-tooltip" id="notif-tip">Notifications off</span>
+      </button>
+      <div class="nav-divider" aria-hidden="true"></div>
       <button class="nav-btn" id="members-btn" data-view="members" aria-label="Members">
         <svg class="icon"><use href="#i-users"/></svg>
         <span class="nav-tooltip">Members</span>
-      </button>
-      <button class="nav-btn" id="notification-status" data-badge="" aria-label="Notifications">
-        <svg class="icon"><use href="#i-bell"/></svg>
-        <span class="nav-tooltip" id="notif-tip">Notifications off</span>
       </button>
       <button class="nav-btn" id="admin-btn" data-view="admin" aria-label="Settings">
         <svg class="icon"><use href="#i-settings"/></svg>
@@ -1706,32 +1775,49 @@
       </section>
     </section>
 
-    <!-- MEMBERS VIEW (admin-locked) -->
+    <!-- MEMBERS VIEW (admin or moderator) -->
     <section class="view-members" id="view-members" hidden>
+      <div class="admin-session-bar" id="members-session-bar" hidden>
+        <span class="admin-session-chip">
+          <svg class="icon icon-sm"><use href="#i-shield"/></svg>
+          <span>Admin</span>
+          <span class="admin-session-sep">·</span>
+          <span class="admin-session-countdown" id="members-session-countdown">—</span>
+        </span>
+        <button class="admin-session-logout" id="logout-members" type="button" title="End admin session now">
+          <svg class="icon icon-sm"><use href="#i-logout"/></svg>
+          <span>Log out</span>
+        </button>
+      </div>
       <article class="card members-card">
         <h3 class="members-head">
           <span><svg class="icon"><use href="#i-users"/></svg> Members</span>
           <span class="members-count" id="members-count">0</span>
         </h3>
         <p class="members-sub">People who have opened the link and set their name.</p>
+        <div class="role-banner" id="members-role-banner" hidden></div>
         <div class="members-list" id="members-list"></div>
       </article>
-      <div class="admin-exit-row">
-        <button class="btn btn-secondary" id="exit-members" type="button">
-          <svg class="icon icon-sm"><use href="#i-x"/></svg> Back to home
-        </button>
-        <button class="btn btn-danger" id="logout-members" type="button" hidden>
-          <svg class="icon icon-sm"><use href="#i-logout"/></svg> Log out admin
-        </button>
-      </div>
-      <div class="admin-session-note" id="members-session-note" hidden>
-        Admin session · auto-logout in <span class="admin-session-countdown" id="members-session-countdown">—</span>
-      </div>
+      <button class="btn btn-secondary btn-full" id="exit-members" type="button">
+        <svg class="icon icon-sm"><use href="#i-x"/></svg> Back to home
+      </button>
     </section>
 
     <!-- ADMIN VIEW -->
     <section class="view-admin" id="view-admin" hidden>
       <div class="admin-panel">
+        <div class="admin-session-bar" id="admin-session-bar" hidden>
+          <span class="admin-session-chip">
+            <svg class="icon icon-sm"><use href="#i-shield"/></svg>
+            <span>Admin</span>
+            <span class="admin-session-sep">·</span>
+            <span class="admin-session-countdown" id="admin-session-countdown">—</span>
+          </span>
+          <button class="admin-session-logout" id="logout-admin" type="button" title="End admin session now">
+            <svg class="icon icon-sm"><use href="#i-logout"/></svg>
+            <span>Log out</span>
+          </button>
+        </div>
         <article class="card admin-section">
           <h3><svg class="icon"><use href="#i-phone"/></svg> Call the office now</h3>
           <div class="call-grid" id="call-grid"></div>
@@ -1823,17 +1909,9 @@
           <div class="save-status" id="save-status"></div>
         </article>
 
-        <div class="admin-exit-row">
-          <button class="btn btn-secondary" id="exit-admin" type="button">
-            <svg class="icon icon-sm"><use href="#i-x"/></svg> Close settings
-          </button>
-          <button class="btn btn-danger" id="logout-admin" type="button" hidden>
-            <svg class="icon icon-sm"><use href="#i-logout"/></svg> Log out admin
-          </button>
-        </div>
-        <div class="admin-session-note" id="admin-session-note" hidden>
-          Admin session · auto-logout in <span class="admin-session-countdown" id="admin-session-countdown">—</span>
-        </div>
+        <button class="btn btn-secondary btn-full" id="exit-admin" type="button">
+          <svg class="icon icon-sm"><use href="#i-x"/></svg> Close settings
+        </button>
       </div>
     </section>
 
@@ -2437,12 +2515,24 @@
     const count = $('members-count');
     if (!list) return;
     count.textContent = String(membersList.length);
+    const role = currentRole();
+    // Show role-banner (just under header) when the current viewer is a moderator-only session
+    const banner = $('members-role-banner');
+    if (banner) {
+      if (role === 'moderator') {
+        banner.hidden = false;
+        banner.innerHTML = '<svg class="icon icon-sm"><use href="#i-shield"/></svg> You are a <b>moderator</b> — you can ping any member for jamaat.';
+      } else {
+        banner.hidden = true;
+      }
+    }
     if (!membersList.length) {
       list.innerHTML = '<div class="members-empty">No one has joined yet. Share the link with your group and they will appear here once they open the app and set a name.</div>';
       return;
     }
     const rows = membersList.map(m => {
       const isYou = m.id === userId;
+      const isMod = !!m.is_moderator;
       const joined = m.joined_at ? new Date(m.joined_at).toLocaleDateString([], { month: 'short', day: 'numeric' }) : '';
       const seen = m.last_seen ? new Date(m.last_seen) : null;
       let seenLabel = '';
@@ -2453,22 +2543,35 @@
         else if (ms < 86400000) seenLabel = Math.floor(ms / 3600000) + 'h ago';
         else seenLabel = seen.toLocaleDateString([], { month: 'short', day: 'numeric' });
       }
-      const actions = isYou ? '' :
-        '<div class="member-actions">' +
+      const modBadge = isMod ? '<span class="mod-tag" title="Moderator"><svg class="icon icon-xs"><use href="#i-shield"/></svg> moderator</span>' : '';
+      let actionHtml = '';
+      if (!isYou) {
+        // Admin: ping + moderator-toggle + delete.  Moderator: ping only.
+        const pingBtn =
           '<button class="member-ping" type="button" data-id="' + escapeHtml(m.id) + '" data-name="' + escapeHtml(m.name || '') + '" aria-label="Call ' + escapeHtml(m.name || 'member') + '" title="Call this member for jamaat">' +
             '<svg class="icon"><use href="#i-bell"/></svg>' +
-          '</button>' +
-          '<button class="member-remove" type="button" data-id="' + escapeHtml(m.id) + '" aria-label="Remove" title="Remove from list">' +
-            '<svg class="icon"><use href="#i-trash"/></svg>' +
-          '</button>' +
-        '</div>';
-      return '<div class="member-row ' + (isYou ? 'is-you' : '') + '" data-id="' + escapeHtml(m.id) + '">' +
+          '</button>';
+        if (role === 'admin') {
+          const modBtn =
+            '<button class="member-mod ' + (isMod ? 'is-on' : '') + '" type="button" data-id="' + escapeHtml(m.id) + '" data-on="' + (isMod ? '1' : '0') + '" aria-label="' + (isMod ? 'Remove' : 'Make') + ' moderator" title="' + (isMod ? 'Remove moderator access' : 'Make moderator (members-only, can ping, cannot delete)') + '">' +
+              '<svg class="icon"><use href="#i-shield"/></svg>' +
+            '</button>';
+          const delBtn =
+            '<button class="member-remove" type="button" data-id="' + escapeHtml(m.id) + '" aria-label="Remove" title="Remove from list">' +
+              '<svg class="icon"><use href="#i-trash"/></svg>' +
+            '</button>';
+          actionHtml = '<div class="member-actions">' + pingBtn + modBtn + delBtn + '</div>';
+        } else if (role === 'moderator') {
+          actionHtml = '<div class="member-actions">' + pingBtn + '</div>';
+        }
+      }
+      return '<div class="member-row ' + (isYou ? 'is-you' : '') + (isMod ? ' is-mod' : '') + '" data-id="' + escapeHtml(m.id) + '">' +
         '<span class="member-avatar">' + escapeHtml(avatarInitials(m.name)) + '</span>' +
         '<div class="member-info">' +
-          '<div class="member-name">' + escapeHtml(m.name || '—') + (isYou ? ' <span class="you-tag">you</span>' : '') + '</div>' +
+          '<div class="member-name">' + escapeHtml(m.name || '—') + (isYou ? ' <span class="you-tag">you</span>' : '') + modBadge + '</div>' +
           '<div class="member-sub">joined ' + escapeHtml(joined) + (seenLabel ? ' · last seen ' + escapeHtml(seenLabel) : '') + '</div>' +
         '</div>' +
-        actions +
+        actionHtml +
         '</div>';
     }).join('');
     list.innerHTML = rows;
@@ -2478,6 +2581,17 @@
     list.querySelectorAll('.member-ping').forEach(btn => {
       btn.addEventListener('click', () => openPingModal(btn.dataset.id, btn.dataset.name));
     });
+    list.querySelectorAll('.member-mod').forEach(btn => {
+      btn.addEventListener('click', () => toggleModerator(btn.dataset.id, btn.dataset.on !== '1'));
+    });
+  }
+
+  async function toggleModerator(id, makeMod) {
+    if (!sb) return;
+    try {
+      await sb.from('members').update({ is_moderator: !!makeMod }).eq('id', id);
+      await loadMembers();
+    } catch (e) { console.warn('toggle moderator', e); }
   }
 
   // --- Direct ping (admin → one member) ---
@@ -2815,14 +2929,11 @@
     }
     const show = !!config.adminPasscode && adminUnlockedAt > 0;
     const txt = show ? fmtRemaining(adminSessionRemaining()) : '—';
-    ['admin-session-note', 'members-session-note'].forEach(id => {
+    ['admin-session-bar', 'members-session-bar'].forEach(id => {
       const el = $(id); if (el) el.hidden = !show;
     });
     ['admin-session-countdown', 'members-session-countdown'].forEach(id => {
       const el = $(id); if (el) el.textContent = txt;
-    });
-    ['logout-admin', 'logout-members'].forEach(id => {
-      const el = $(id); if (el) el.hidden = !show;
     });
   }
   function startAdminSessionTimer() {
@@ -2853,6 +2964,11 @@
 
   function openGated(target) {
     passcodeTarget = target;
+    // Moderators get Members-only access, no passcode.
+    if (target === 'members' && isCurrentUserModerator()) {
+      setView('members');
+      return;
+    }
     if (!config.adminPasscode || adminSessionActive()) {
       setView(target);
       return;
@@ -2863,6 +2979,17 @@
   }
   function openAdmin() { openGated('admin'); }
   function openMembers() { openGated('members'); }
+
+  function isCurrentUserModerator() {
+    const me = membersList.find(m => m.id === userId);
+    return !!(me && me.is_moderator);
+  }
+  function currentRole() {
+    // 'admin' = full admin session active; 'moderator' = moderator but not full admin; 'guest' = neither
+    if (adminSessionActive()) return 'admin';
+    if (isCurrentUserModerator()) return 'moderator';
+    return 'guest';
+  }
   function exitAdmin() { setView('home'); }
 
   function wire() {
@@ -2920,6 +3047,18 @@
     });
     $('passcode-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('passcode-ok').click(); });
     $('passcode-cancel').addEventListener('click', () => { $('passcode-modal').hidden = true; });
+
+    // Esc closes any open modal; click on backdrop dismisses passcode / ping / name (unless first-time)
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      ['passcode-modal', 'ping-modal'].forEach(id => { const m = $(id); if (m && !m.hidden) m.hidden = true; });
+      const nameModal = $('name-modal');
+      if (nameModal && !nameModal.hidden && !$('name-cancel').hidden) nameModal.hidden = true;
+    });
+    ['passcode-modal', 'ping-modal'].forEach(id => {
+      const el = $(id); if (!el) return;
+      el.addEventListener('click', e => { if (e.target === el) el.hidden = true; });
+    });
     document.addEventListener('change', e => {
       if (e.target && e.target.id === 'setting-city') {
         const key = $('setting-city').value;
@@ -2985,11 +3124,12 @@
     } else {
       touchLastSeen();
     }
-    // Live members subscription
+    // Live members subscription — always reload so moderator state and the
+    // sidebar access check stay in sync even when the user is on Home.
     if (sb) {
       sb.channel('members_watch').on('postgres_changes',
         { event: '*', schema: 'public', table: 'members' },
-        () => { if (currentView === 'members') loadMembers(); }
+        () => { loadMembers(); }
       ).subscribe();
     }
   }
