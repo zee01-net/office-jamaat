@@ -1089,6 +1089,34 @@
   }
   .btn-secondary:hover { color: var(--fg); border-color: var(--border-strong); background: var(--surface-raised); filter: none; }
   .btn-full { width: 100%; }
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    box-shadow: none;
+  }
+  .btn-danger:hover {
+    background: var(--danger);
+    color: #fff;
+    filter: none;
+  }
+  .admin-exit-row {
+    display: flex; gap: var(--s-3);
+    margin-top: var(--s-4);
+  }
+  .admin-exit-row .btn { flex: 1; }
+  .admin-session-note {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: var(--s-2);
+    letter-spacing: 0.02em;
+  }
+  .admin-session-note .admin-session-countdown {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-weight: 600;
+  }
 
   .save-status {
     display: inline-flex; align-items: center; gap: var(--s-2);
@@ -1216,15 +1244,22 @@
   .nav-btn.notif-on {
     color: var(--accent);
     background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 2px rgba(122, 62, 219, 0.15);
   }
+  .nav-btn.notif-on .icon { filter: drop-shadow(0 0 4px rgba(122, 62, 219, 0.45)); }
   .nav-btn.notif-on::after {
     content: "";
     position: absolute;
     top: 8px; right: 8px;
-    width: 7px; height: 7px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--success);
-    box-shadow: 0 0 0 2px var(--surface);
+    box-shadow: 0 0 0 2px var(--surface), 0 0 6px var(--success);
+    animation: bellPulse 2s ease-in-out infinite;
+  }
+  @keyframes bellPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.25); opacity: 0.75; }
   }
   .nav-btn.notif-muted {
     color: var(--muted);
@@ -1387,6 +1422,7 @@
     border-radius: 999px;
   }
   .members-sub { color: var(--muted); font-size: 13px; margin: 0 0 var(--s-5); }
+  .section-sub { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 var(--s-4); }
   .members-list { display: flex; flex-direction: column; gap: var(--s-2); }
   .member-row {
     display: flex; align-items: center; gap: var(--s-4);
@@ -1521,7 +1557,9 @@
     <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
     <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-bell-on" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5z" fill="currentColor" stroke="currentColor"/><path d="M10 20a2 2 0 0 0 4 0" fill="none"/></symbol>
     <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.9 17.9 0 0 1 18 8"/><path d="M6.26 6.26A5.9 5.9 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><path d="M1 1l22 22"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></symbol>
     <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
@@ -1662,7 +1700,7 @@
             <span class="ornament"><svg class="rub" aria-hidden="true"><use href="#rub"/></svg></span>
             Jamaat schedule
           </span>
-          <span class="schedule-note">five daily prayers · hanafi</span>
+          <span class="schedule-note">five daily prayers</span>
         </div>
         <div class="prayer-stack" id="prayer-list"></div>
       </section>
@@ -1678,9 +1716,17 @@
         <p class="members-sub">People who have opened the link and set their name.</p>
         <div class="members-list" id="members-list"></div>
       </article>
-      <button class="btn btn-secondary btn-full" id="exit-members" type="button">
-        <svg class="icon icon-sm"><use href="#i-x"/></svg> Back to home
-      </button>
+      <div class="admin-exit-row">
+        <button class="btn btn-secondary" id="exit-members" type="button">
+          <svg class="icon icon-sm"><use href="#i-x"/></svg> Back to home
+        </button>
+        <button class="btn btn-danger" id="logout-members" type="button" hidden>
+          <svg class="icon icon-sm"><use href="#i-logout"/></svg> Log out admin
+        </button>
+      </div>
+      <div class="admin-session-note" id="members-session-note" hidden>
+        Admin session · auto-logout in <span class="admin-session-countdown" id="members-session-countdown">—</span>
+      </div>
     </section>
 
     <!-- ADMIN VIEW -->
@@ -1692,7 +1738,13 @@
         </article>
 
         <article class="card admin-section">
-          <h3><svg class="icon"><use href="#i-clock"/></svg> Jamaat times</h3>
+          <h3><svg class="icon"><use href="#i-clock"/></svg> Jamaat times &amp; weekly schedule</h3>
+          <p class="section-sub">
+            Set when the group gathers for each prayer and which days of the
+            week to do it. <b>+ min</b> starts jamaat a few minutes after the
+            prayer begins; <b>at</b> pins a fixed clock time. Unchecked days
+            mean no gathering and no reminder on that weekday.
+          </p>
           <div class="jamaat-section" id="jamaat-section"></div>
         </article>
 
@@ -1721,7 +1773,13 @@
         </article>
 
         <article class="card admin-section">
-          <h3><svg class="icon"><use href="#i-mute"/></svg> Mute today's auto-reminder</h3>
+          <h3><svg class="icon"><use href="#i-mute"/></svg> Skip a prayer today</h3>
+          <p class="section-sub">
+            One-tap skip, today only — mutes the 5-min auto-reminder for the
+            whole group. Use it when the team is skipping jamaat for one prayer
+            (client visit, early close, offsite). Admin's <b>Call now</b> and
+            individual pings still work. Resets at midnight.
+          </p>
           <div class="mute-grid" id="mute-grid"></div>
         </article>
 
@@ -1765,9 +1823,17 @@
           <div class="save-status" id="save-status"></div>
         </article>
 
-        <button class="btn btn-secondary btn-full" id="exit-admin" type="button">
-          <svg class="icon icon-sm"><use href="#i-x"/></svg> Close settings
-        </button>
+        <div class="admin-exit-row">
+          <button class="btn btn-secondary" id="exit-admin" type="button">
+            <svg class="icon icon-sm"><use href="#i-x"/></svg> Close settings
+          </button>
+          <button class="btn btn-danger" id="logout-admin" type="button" hidden>
+            <svg class="icon icon-sm"><use href="#i-logout"/></svg> Log out admin
+          </button>
+        </div>
+        <div class="admin-session-note" id="admin-session-note" hidden>
+          Admin session · auto-logout in <span class="admin-session-countdown" id="admin-session-countdown">—</span>
+        </div>
       </div>
     </section>
 
@@ -1777,7 +1843,7 @@
         <svg class="rub" aria-hidden="true"><use href="#rub"/></svg>
         <span class="line"></span>
       </div>
-      <div><span id="footer-method">—</span> · Hanafi school · <span id="footer-sync">local only</span></div>
+      <div><span id="footer-method">—</span> · <span id="footer-sync">local only</span></div>
       <div>Open in Chrome, allow notifications, then <strong>Install page as app</strong> for a desktop shortcut.</div>
     </div>
   </main>
@@ -1891,7 +1957,7 @@
     Egyptian: 5, Tehran: 7, Kuwait: 9, Qatar: 10, Singapore: 11,
     Turkey: 13, MoonsightingCommittee: 15, Dubai: 16,
   };
-  const timesCache = {};
+  let timesCache = {};
 
   // Ring geometry — must match svg r=85
   const RING_R = 85;
@@ -1902,9 +1968,26 @@
   let timers = [];
   const seenTriggers = new Set();
   let audioCtx = null, isAdmin = false;
+  // Admin session: timestamp of last successful passcode entry.
+  // Valid for 5 minutes; shared across Settings and Members.
+  const ADMIN_SESSION_MS = 5 * 60 * 1000;
+  let adminUnlockedAt = 0;
+  function adminSessionActive() {
+    return !config.adminPasscode || (Date.now() - adminUnlockedAt) < ADMIN_SESSION_MS;
+  }
+  function adminSessionRemaining() {
+    if (!config.adminPasscode) return Infinity;
+    return Math.max(0, ADMIN_SESSION_MS - (Date.now() - adminUnlockedAt));
+  }
+  function logoutAdmin() {
+    adminUnlockedAt = 0;
+    isAdmin = false;
+    setView('home');
+  }
   let currentTimes = null, currentJamaats = null;
   let tomorrowTimes = null, tomorrowJamaats = null;
   let prevRenderedPrayer = null;
+  let prevJamaatSig = '';
   let membersList = [];
   let userId = '';
   let userName = '';
@@ -1969,19 +2052,22 @@
       if (tip) tip.textContent = 'Muted · click to turn on';
       return;
     }
-    if (useEl) useEl.setAttribute('href', '#i-bell');
     if (!('Notification' in window)) {
+      if (useEl) useEl.setAttribute('href', '#i-bell');
       btn.classList.add('notif-noperm');
       if (tip) tip.textContent = 'Notifications unavailable';
       return;
     }
     if (Notification.permission === 'granted') {
+      if (useEl) useEl.setAttribute('href', '#i-bell-on');
       btn.classList.add('notif-on');
       if (tip) tip.textContent = 'Notifications on · click to mute';
     } else if (Notification.permission === 'denied') {
+      if (useEl) useEl.setAttribute('href', '#i-bell');
       btn.classList.add('notif-noperm');
       if (tip) tip.textContent = 'Browser blocked · banner + chime still work';
     } else {
+      if (useEl) useEl.setAttribute('href', '#i-bell');
       btn.classList.add('notif-noperm');
       if (tip) tip.textContent = 'Click to enable browser alerts';
     }
@@ -2144,11 +2230,18 @@
     if (!currentTimes || !currentJamaats) return;
     const next = getNextPrayer(currentJamaats, currentTimes);
     const now = new Date(), todayK = todayKey();
-    // Only full re-render when the "next" prayer changes to avoid resetting entry animations
+    // Full re-render when the "next" prayer changes OR when any jamaat/start time changes
+    // (e.g. admin saved new settings, timezone changed, config updated via realtime).
     const nextKey = next.prayer + (next.tomorrow ? ':t' : '');
+    const jamaatSig = PRAYERS.map(p =>
+      p + ':' + (currentJamaats[p] ? currentJamaats[p].getTime() : 0) +
+      '/' + (currentTimes[p] ? currentTimes[p].getTime() : 0) +
+      (config.mutedToday[p] && config.mutedDate === todayK ? ':m' : '')
+    ).join('|');
     const container = $('prayer-list');
-    if (!container.children.length || prevRenderedPrayer !== nextKey) {
+    if (!container.children.length || prevRenderedPrayer !== nextKey || prevJamaatSig !== jamaatSig) {
       prevRenderedPrayer = nextKey;
+      prevJamaatSig = jamaatSig;
       container.innerHTML = PRAYERS.map(p => {
         const start = currentTimes[p], jamaat = currentJamaats[p];
         const isNext = p === next.prayer && !next.tomorrow;
@@ -2287,7 +2380,7 @@
           '</div>' +
         '</div>' +
         '<div class="jamaat-days">' +
-          '<span class="jamaat-days-label">Reminder days</span>' +
+          '<span class="jamaat-days-label">Jamaat days</span>' +
           '<div class="day-pills">' + dayPills + '</div>' +
         '</div>' +
       '</div>';
@@ -2582,7 +2675,17 @@
     }
     const mid = new Date(); mid.setHours(24,0,30,0);
     const toMid = mid - now;
-    if (toMid > 0 && toMid < 2147483000) timers.push(setTimeout(renderAll, toMid));
+    if (toMid > 0 && toMid < 2147483000) {
+      timers.push(setTimeout(async () => {
+        // New day: refetch so Fajr/Dhuhr/… reflect today's actual times.
+        currentTimes = tomorrowTimes || currentTimes;
+        currentJamaats = tomorrowJamaats || currentJamaats;
+        tomorrowTimes = null; tomorrowJamaats = null;
+        prevRenderedPrayer = null; prevJamaatSig = '';
+        await refreshTimes();
+        renderAll();
+      }, toMid));
+    }
   }
 
   async function initDb() {
@@ -2695,6 +2798,39 @@
   // Target of the passcode gate — 'admin' or 'members'
   let passcodeTarget = 'admin';
 
+  let adminSessionTimer = null;
+  function stopAdminSessionTimer() {
+    if (adminSessionTimer) { clearInterval(adminSessionTimer); adminSessionTimer = null; }
+  }
+  function fmtRemaining(ms) {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    const m = Math.floor(s / 60), r = s % 60;
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function tickAdminSession() {
+    // Expire?
+    if (config.adminPasscode && !adminSessionActive() && adminUnlockedAt > 0) {
+      logoutAdmin();
+      return;
+    }
+    const show = !!config.adminPasscode && adminUnlockedAt > 0;
+    const txt = show ? fmtRemaining(adminSessionRemaining()) : '—';
+    ['admin-session-note', 'members-session-note'].forEach(id => {
+      const el = $(id); if (el) el.hidden = !show;
+    });
+    ['admin-session-countdown', 'members-session-countdown'].forEach(id => {
+      const el = $(id); if (el) el.textContent = txt;
+    });
+    ['logout-admin', 'logout-members'].forEach(id => {
+      const el = $(id); if (el) el.hidden = !show;
+    });
+  }
+  function startAdminSessionTimer() {
+    stopAdminSessionTimer();
+    tickAdminSession();
+    adminSessionTimer = setInterval(tickAdminSession, 1000);
+  }
+
   function setView(view) {
     const home = $('view-home'), admin = $('view-admin'), members = $('view-members');
     home.hidden = true; admin.hidden = true; members.hidden = true;
@@ -2709,16 +2845,21 @@
     if (view === 'admin' || view === 'members') {
       const el = view === 'admin' ? admin : members;
       setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      startAdminSessionTimer();
+    } else {
+      stopAdminSessionTimer();
     }
   }
 
   function openGated(target) {
     passcodeTarget = target;
-    if (config.adminPasscode) {
-      $('passcode-modal').hidden = false;
-      $('passcode-input').value = '';
-      setTimeout(() => $('passcode-input').focus(), 10);
-    } else { setView(target); }
+    if (!config.adminPasscode || adminSessionActive()) {
+      setView(target);
+      return;
+    }
+    $('passcode-modal').hidden = false;
+    $('passcode-input').value = '';
+    setTimeout(() => $('passcode-input').focus(), 10);
   }
   function openAdmin() { openGated('admin'); }
   function openMembers() { openGated('members'); }
@@ -2761,11 +2902,17 @@
     });
     $('exit-admin').addEventListener('click', exitAdmin);
     $('exit-members').addEventListener('click', exitAdmin);
+    $('logout-admin').addEventListener('click', logoutAdmin);
+    $('logout-members').addEventListener('click', logoutAdmin);
     $('save-settings').addEventListener('click', saveSettings);
     $('banner-close').addEventListener('click', () => { $('banner').hidden = true; });
     $('passcode-ok').addEventListener('click', () => {
       const input = $('passcode-input').value;
-      if (input === config.adminPasscode) { $('passcode-modal').hidden = true; setView(passcodeTarget); }
+      if (input === config.adminPasscode) {
+        adminUnlockedAt = Date.now();
+        $('passcode-modal').hidden = true;
+        setView(passcodeTarget);
+      }
       else {
         const el = $('passcode-input'); el.classList.remove('wrong-shake'); void el.offsetWidth; el.classList.add('wrong-shake');
         setTimeout(() => el.classList.remove('wrong-shake'), 400);
@@ -2811,6 +2958,19 @@
     setInterval(() => {
       if (currentTimes && currentJamaats) { renderHero(); renderPrayerList(); }
     }, 1000);
+    // Timezone-change watcher: if the browser's UTC offset changes (travel, DST),
+    // flush the times cache and refetch so the home page updates automatically.
+    let lastTzOffset = new Date().getTimezoneOffset();
+    setInterval(async () => {
+      const nowTz = new Date().getTimezoneOffset();
+      if (nowTz !== lastTzOffset) {
+        lastTzOffset = nowTz;
+        timesCache = {};
+        prevRenderedPrayer = null; prevJamaatSig = '';
+        await refreshTimes();
+        renderAll();
+      }
+    }, 30000);
     await initDb();
     // Load members list and reconcile user name with server
     if (sb) {
